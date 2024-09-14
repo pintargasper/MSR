@@ -13,6 +13,8 @@ public class Static {
 
     private static Player player;
     private static ArrayList<Rectangle> ladders;
+    private static ArrayList<Rectangle> stopOnLadders;
+    private static ArrayList<Rectangle> waters;
     private static HashMap<String, ArrayList<Vector2>> ziplines;
 
     public static Player getPlayer() {
@@ -29,6 +31,22 @@ public class Static {
 
     public static void setLadders(ArrayList<Rectangle> ladders) {
         Static.ladders = ladders;
+    }
+
+    public static ArrayList<Rectangle> getStopOnLadders() {
+        return stopOnLadders;
+    }
+
+    public static void setStopOnLadders(ArrayList<Rectangle> stopOnLadders) {
+        Static.stopOnLadders = stopOnLadders;
+    }
+
+    public static ArrayList<Rectangle> getWaters() {
+        return waters;
+    }
+
+    public static void setWaters(ArrayList<Rectangle> waters) {
+        Static.waters = waters;
     }
 
     public static HashMap<String, ArrayList<Vector2>> getZiplines() {

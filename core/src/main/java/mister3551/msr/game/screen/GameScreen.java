@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import mister3551.msr.game.Static;
+import mister3551.msr.game.characters.Collision;
 import mister3551.msr.game.characters.Player;
 import mister3551.msr.game.map.TiledMapHelper;
 
@@ -23,8 +24,8 @@ public class GameScreen implements Screen {
     private final OrthographicCamera orthographicCamera;
     private final OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private final SpriteBatch spriteBatch;
-
     private final Player player;
+    private final Collision collision;
 
     public GameScreen() {
         this.world = new World(new Vector2(0, -25), true);
@@ -32,12 +33,15 @@ public class GameScreen implements Screen {
         this.orthographicCamera = new OrthographicCamera();
 
         Static.setLadders(new ArrayList<>());
+        Static.setStopOnLadders(new ArrayList<>());
+        Static.setWaters(new ArrayList<>());
         Static.setZiplines(new HashMap<>());
 
         TiledMapHelper tiledMapHelper = new TiledMapHelper(world);
         this.orthogonalTiledMapRenderer = tiledMapHelper.setupMap();
         this.spriteBatch = new SpriteBatch();
         this.player = Static.getPlayer();
+        this.collision = new Collision(world, player);
     }
 
     @Override
@@ -96,6 +100,7 @@ public class GameScreen implements Screen {
         world.clearForces();
         cameraOnPlayer();
 
+        collision.collide();
         player.update(delta);
     }
 

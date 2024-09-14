@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import mister3551.msr.game.characters.Player;
 import mister3551.msr.game.controls.zipline.OnZipline;
 import mister3551.msr.game.controls.zipline.Zipline;
 
@@ -38,8 +39,8 @@ public class Mobile extends Device {
     private final Image rightImage;
     private final Image jumpImage;
 
-    public Mobile(Body body, float speed, float speedOnLadder, float speedOnZipline) {
-        super(body, speed, speedOnLadder, speedOnZipline);
+    public Mobile(Body body, Player player) {
+        super(body, player);
         this.viewport = new ExtendViewport(800, 480);
         this.stage = new Stage(viewport);
 
@@ -124,72 +125,89 @@ public class Mobile extends Device {
     }
 
     @Override
-    public void inputs(boolean ladderCollision, Zipline zipLine) {
+    public void inputs(boolean ladderCollision, boolean stopOnLadder, boolean waterCollision, Zipline zipLine) {
         if (zipLine != null && getZipline() == null && zipLine.isZiplineCollision()) {
             setZipline(zipLine);
         }
 
-        if (getZipline() != null) {
-            onZipLine(getZipline().getPoints());
+        Zipline currentZipline = getZipline();
+        if (currentZipline != null) {
             setVisibility(false, false, false, false, false);
+            onZipline(currentZipline.getPoints());
         } else {
-            if (ladderCollision) {
-                onLadder();
-                setVisibility(true, true, true, true, false);
-            } else {
-                body.setGravityScale(1);
-                jump();
-                setVisibility(false, false, true, true, true);
-            }
-            normal();
-
-            if (body.getLinearVelocity().y == 0) {
-                jumps = 0;
-            }
+            walking(ladderCollision, stopOnLadder, waterCollision);
         }
     }
 
     @Override
-    public void normal() {
+    public void walking(boolean ladderCollision, boolean stopOnLadder, boolean watterCollision) {
         velocityX = 0;
+        velocityY = 0;
 
-        if (moveRightPressed) {
-            velocityX++;
-        }
-
-        if (moveLeftPressed) {
+        if (moveLeftPressed && !player.isOnLeftSide()) {
+            player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() :  player.getCharacterAnimation().getZiplineLeft());
+            lastMove = "left";
             velocityX--;
+        } else if (moveRightPressed && !player.isOnRightSide()) {
+            player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() :  player.getCharacterAnimation().getZiplineRight());
+            lastMove = "right";
+            velocityX++;
+        } else if (player.isOnFloor()) {
+            if (!watterCollision) {
+                player.setCurrentAnimation(lastMove.equals("left") ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
+            } else {
+                player.setCurrentAnimation(lastMove.equals("left") ? player.getCharacterAnimation().getSwimLeft() : player.getCharacterAnimation().getSwimRight());
+            }
         }
-        body.setLinearVelocity(velocityX * speed, Math.min(body.getLinearVelocity().y, 25));
+
+        if (moveUpPressed && ladderCollision) {
+            player.setCurrentAnimation(!stopOnLadder ? player.getCharacterAnimation().getClimb() : player.getCharacterAnimation().getStanding());
+            velocityY = player.getSpeedOnLadder();
+        } else if (moveDownPressed && ladderCollision) {
+            player.setCurrentAnimation(player.getCharacterAnimation().getClimb());
+            velocityY = -player.getSpeedOnLadder();
+        } else if (!stopOnLadder && ladderCollision) {
+            player.setCurrentAnimation(player.getCharacterAnimation().getStandingOnLadder());
+        }
+
+        if (player.isOnFloor()) {
+            player.setJumps(0);
+
+            if (velocityX == 0 && stopOnLadder) {
+                player.setCurrentAnimation(lastMove.equals("left") ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
+            }
+        }
+
+        if (ladderCollision && velocityY == 0 && !player.isOnFloor()) {
+            player.setCurrentAnimation(!stopOnLadder ? player.getCharacterAnimation().getStandingOnLadder() : lastMove.equals("left") ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
+        }
+
+        if (moveJumpPressed && player.getJumps() < 1 && player.isOnFloor() && !ladderCollision) {
+            jump();
+            body.setGravityScale(1);
+        }
+
+        if (ladderCollision) {
+            body.setGravityScale(0);
+            body.setLinearVelocity(velocityX * player.getSpeed(), velocityY);
+            setVisibility(true, true, true, true, false);
+        } else {
+            body.setGravityScale(1);
+            body.setLinearVelocity(velocityX * player.getSpeed(), Math.min(body.getLinearVelocity().y, 25));
+            setVisibility(false, false, true, true, true);
+        }
     }
 
     @Override
     public void jump() {
-        if (moveJumpPressed && jumps < 1) {
-            body.setLinearVelocity(body.getLinearVelocity().x, 0);
-            body.applyLinearImpulse(new Vector2(0, body.getMass() * 12), body.getPosition(), true);
-            jumps++;
-        }
+        body.setLinearVelocity(body.getLinearVelocity().x, 0);
+        body.applyLinearImpulse(new Vector2(0, body.getMass() * 12), body.getPosition(), true);
+        player.setJumps(player.getJumps() + 1);
     }
 
     @Override
-    public void onLadder() {
-        velocityY = 0;
-        body.setGravityScale(0);
-
-        if (moveUpPressed) {
-            velocityY++;
-        }
-
-        if (moveDownPressed) {
-            velocityY--;
-        }
-        body.setLinearVelocity(velocityX * speedOnLadder, velocityY * speedOnLadder);
-    }
-
-    @Override
-    public void onZipLine(ArrayList<Vector2> points) {
-        zipline = OnZipline.movement(body, zipline, points, speedOnZipLine);
+    public void onZipline(ArrayList<Vector2> points) {
+        zipline = OnZipline.movement(body, player, zipline, points, player.getSpeedOnZipline());
     }
 
     private void addControlListener(Image control, final String direction) {

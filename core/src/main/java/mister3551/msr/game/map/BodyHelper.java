@@ -31,13 +31,44 @@ public class BodyHelper {
         bodyDef.fixedRotation = true;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2 / Static.PPM, height / 2 / Static.PPM);
+        shape.setAsBox(width / 4 / Static.PPM, height / 2 / Static.PPM);
 
         Body body = world.createBody(bodyDef);
         body.createFixture(fixtureDef(shape));
-
         shape.dispose();
+
+        createSensor(body, width, height, "left-side", height / 2);
+        createSensor(body, width, height, "right-side", height / 2);
+        createSensor(body, width, height, "foot", height / 2);
+        createSensor(body, width, height, "foot-backup", (height + 50) / 2);
+
         return body;
+    }
+
+    private void createSensor(Body body, float width, float height, String userData, float offsetY) {
+        PolygonShape sensorShape = new PolygonShape();
+
+        switch (userData) {
+            case "foot":
+                sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
+                break;
+            case "foot-backup":
+                sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
+                break;
+            case "right-side":
+                sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(width / 2 / Static.PPM, 0), 0);
+                break;
+            case "left-side":
+                sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(-width / 2 / Static.PPM, 0), 0);
+                break;
+        }
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = sensorShape;
+        fixtureDef.isSensor = true;
+        Fixture sensor = body.createFixture(fixtureDef);
+        sensor.setUserData(userData);
+        sensorShape.dispose();
     }
 
     private FixtureDef fixtureDef(PolygonShape shape) {

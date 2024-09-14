@@ -2,12 +2,13 @@ package mister3551.msr.game.controls.zipline;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import mister3551.msr.game.characters.Player;
 
 import java.util.ArrayList;
 
 public class OnZipline {
 
-    public static Zipline movement(Body body, Zipline zipline, ArrayList<Vector2> points, float speedOnZipline) {
+    public static Zipline movement(Body body, Player player, Zipline zipline, ArrayList<Vector2> points, float speedOnZipline) {
         if (points.size() < 2) {
             return null;
         }
@@ -30,6 +31,8 @@ public class OnZipline {
 
         Vector2 direction = zipline.getTargetPoint().cpy().sub(currentPosition);
         direction.nor().scl(speedOnZipline);
+
+        player.setCurrentAnimation(direction.x < 0 ? player.getCharacterAnimation().getZiplineLeft() : player.getCharacterAnimation().getZiplineRight());
 
         body.setGravityScale(0);
         body.setLinearVelocity(direction);
