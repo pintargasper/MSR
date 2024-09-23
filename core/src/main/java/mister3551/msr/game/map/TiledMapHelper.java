@@ -14,7 +14,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import mister3551.msr.game.Static;
-import mister3551.msr.game.characters.Player;
+import mister3551.msr.game.characters.object.Enemy;
+import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.characters.object.Weapon;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ public class TiledMapHelper {
 
     public TiledMapHelper(World world) {
         this.bodyHelper = new BodyHelper(world);
+        Static.setBodyHelper(bodyHelper);
     }
 
     public OrthogonalTiledMapRenderer setupMap() {
@@ -61,10 +64,21 @@ public class TiledMapHelper {
                 if (mapObject.getName() != null && mapObject.getName().equals("Player")) {
                     ObjectData objectData = objectData(mapObject);
 
-                    Body body = bodyHelper.body(objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
+                    Weapon weapon = new Weapon("RPK-74", 36, 43, 50, 650, 45);
+
+                    Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
                     body.setUserData(mapObject.getName());
                     Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
-                    Static.setPlayer(new Player(body, rectangle, objectData));
+                    Static.setPlayer(new Player(body, rectangle, weapon, objectData));
+                } else if (mapObject.getName() != null && mapObject.getName().equals("Enemy")) {
+                    ObjectData objectData = objectData(mapObject);
+
+                    Weapon weapon = new Weapon("RPK-74", 36, 43, 50, 650, 45);
+
+                    Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
+                    body.setUserData(mapObject.getName());
+                    Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
+                    Static.getEnemies().add(new Enemy(body, rectangle, weapon, objectData));
                 }
             }
         }

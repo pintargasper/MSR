@@ -2,7 +2,7 @@ package mister3551.msr.game.controls.zipline;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import mister3551.msr.game.characters.Player;
+import mister3551.msr.game.characters.object.Player;
 
 import java.util.ArrayList;
 

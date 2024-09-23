@@ -23,7 +23,9 @@ public class BodyHelper {
         shape.dispose();
     }
 
-    public Body body(float width, float height, float x, float y, boolean isStatic) {
+    public Body body(String name, float width, float height, float x, float y, boolean isStatic) {
+
+        name = name.toLowerCase();
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = isStatic ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody;
@@ -37,30 +39,34 @@ public class BodyHelper {
         body.createFixture(fixtureDef(shape));
         shape.dispose();
 
-        createSensor(body, width, height, "left-side", height / 2);
-        createSensor(body, width, height, "right-side", height / 2);
-        createSensor(body, width, height, "foot", height / 2);
-        createSensor(body, width, height, "foot-backup", (height + 50) / 2);
-
+        if (!name.equals("bullet")) {
+            createSensor(body, width, height, name + "-left-side", height / 2);
+            createSensor(body, width, height, name + "-right-side", height / 2);
+            createSensor(body, width, height, name + "-foot", height / 2);
+            createSensor(body, width, height, name + "-foot-backup", (height + 50) / 2);
+        }
         return body;
+    }
+
+    public void destroyBody(Body body) {
+        if (body.getFixtureList().size > 0) {
+            body.destroyFixture(body.getFixtureList().first());
+        }
     }
 
     private void createSensor(Body body, float width, float height, String userData, float offsetY) {
         PolygonShape sensorShape = new PolygonShape();
 
-        switch (userData) {
-            case "foot":
-                sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
-                break;
-            case "foot-backup":
-                sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
-                break;
-            case "right-side":
-                sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(width / 2 / Static.PPM, 0), 0);
-                break;
-            case "left-side":
-                sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(-width / 2 / Static.PPM, 0), 0);
-                break;
+        String name = userData.split("-")[0];
+
+        if (userData.equals(name + "-foot")) {
+            sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
+        } else if (userData.equals(name + "-foot-backup")) {
+            sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
+        } else if (userData.equals(name + "-right-side")) {
+            sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(width / 2 / Static.PPM, 0), 0);
+        } else if (userData.equals(name + "-left-side")) {
+            sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(-width / 2 / Static.PPM, 0), 0);
         }
 
         FixtureDef fixtureDef = new FixtureDef();

@@ -6,40 +6,54 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
+import mister3551.msr.game.characters.object.Weapon;
+import mister3551.msr.game.controls.shoot.OnShoot;
 
 public abstract class Character {
 
     protected Body body;
     protected Rectangle rectangle;
+    protected Weapon weapon;
     protected TextureAtlas textureAtlas;
     protected CharacterAnimation characterAnimation;
-    private Animation<TextureRegion> currentAnimation;
+    protected Animation<TextureRegion> currentAnimation;
+    protected final OnShoot onShoot;
     protected float width;
     protected float height;
     protected float x;
     protected float y;
+    protected float velocityX;
+    protected float velocityY;
+    protected int live;
     protected float speed;
     protected float speedOnLadder;
     protected float speedOnZipline;
     protected int jumps;
+    protected boolean bodyOnFloor;
     protected boolean onFloor;
     protected boolean onLeftSide;
     protected boolean onRightSide;
-    protected boolean jumping;
+    protected String lastMove;
 
-    public Character(Body body, Rectangle rectangle, float width, float height) {
+    public Character(Body body, Rectangle rectangle, Weapon weapon, float width, float height) {
         this.body = body;
         this.rectangle = rectangle;
+        this.weapon = weapon;
+        this.onShoot = new OnShoot();
         this.width = width;
         this.height = height;
         this.x = body.getPosition().x;
         this.y = body.getPosition().y;
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.live = 100;
         this.speed = 0;
         this.speedOnLadder = 0;
         this.speedOnZipline = 0;
         this.jumps = 0;
+        this.bodyOnFloor = false;
         this.onFloor = false;
-        this.jumping = false;
+        this.lastMove = "right";
     }
 
     public abstract void show();
@@ -50,6 +64,10 @@ public abstract class Character {
 
     public Body getBody() {
         return body;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
     }
 
     public CharacterAnimation getCharacterAnimation() {
@@ -64,12 +82,40 @@ public abstract class Character {
         this.currentAnimation = currentAnimation;
     }
 
+    public OnShoot getOnShoot() {
+        return onShoot;
+    }
+
     public float getWidth() {
         return width;
     }
 
     public float getHeight() {
         return height;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
     }
 
     public float getSpeed() {
@@ -90,6 +136,14 @@ public abstract class Character {
 
     public void setJumps(int jumps) {
         this.jumps = jumps;
+    }
+
+    public boolean isBodyOnFloor() {
+        return bodyOnFloor;
+    }
+
+    public void setBodyOnFloor(boolean bodyOnFloor) {
+        this.bodyOnFloor = bodyOnFloor;
     }
 
     public boolean isOnFloor() {
@@ -116,11 +170,11 @@ public abstract class Character {
         this.onRightSide = onRightSide;
     }
 
-    public boolean isJumping() {
-        return jumping;
+    public String getLastMove() {
+        return lastMove;
     }
 
-    public void setJumping(boolean jumping) {
-        this.jumping = jumping;
+    public void setLastMove(String lastMove) {
+        this.lastMove = lastMove;
     }
 }

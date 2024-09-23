@@ -1,4 +1,4 @@
-package mister3551.msr.game.characters;
+package mister3551.msr.game.characters.object;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -7,7 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import mister3551.msr.game.Static;
+import mister3551.msr.game.characters.Character;
+import mister3551.msr.game.characters.CharacterAnimation;
 import mister3551.msr.game.controls.Computer;
+import mister3551.msr.game.controls.Controller;
 import mister3551.msr.game.controls.Mobile;
 import mister3551.msr.game.controls.zipline.Zipline;
 import mister3551.msr.game.map.ObjectData;
@@ -18,27 +21,30 @@ public class Player extends Character {
 
     private final Computer computer;
     private final Mobile mobile;
+    private final Controller controller;
     private float elapsedTime = 0;
+    private float offset;
 
-    public Player(Body body, Rectangle rectangle, ObjectData objectData) {
-        super(body, rectangle, objectData.getWidth(), objectData.getHeight());
+    public Player(Body body, Rectangle rectangle, Weapon weapon, ObjectData objectData) {
+        super(body, rectangle, weapon, objectData.getWidth(), objectData.getHeight());
         this.speed = 10;
         this.speedOnLadder = 5;
         this.speedOnZipline = 15;
         this.jumps = 1;
         this.computer = new Computer(body, this);
         this.mobile = new Mobile(body, this);
-        textureAtlas = new TextureAtlas("maps/tiles/character/player/atlas/player.atlas");
-        characterAnimation = new CharacterAnimation(
+        this.controller = new Controller(body, this);
+        this.textureAtlas = new TextureAtlas("maps/tiles/character/player/atlas/player.atlas");
+        this.characterAnimation = new CharacterAnimation(
             textureAtlas,
             "player",
             "player_climb_stand",
-            "player_stand_left",
-            "player_stand_right",
-            "player_walk_left1",
-            "player_walk_left2",
-            "player_walk_right1",
-            "player_walk_right2",
+            "player_stand_left_arm",
+            "player_stand_right_arm",
+            "player_walk_left1_arm",
+            "player_walk_left2_arm",
+            "player_walk_right1_arm",
+            "player_walk_right2_arm",
             "player_climb1",
             "player_climb2",
             "player_fly_left",
@@ -53,17 +59,32 @@ public class Player extends Character {
 
     @Override
     public void show() {
-        if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            mobile.show();
+        switch (Gdx.app.getType()) {
+            case Desktop:
+            case WebGL:
+                if (controller.getConnected()) {
+                    controller.show();
+                } else {
+                    computer.show();
+                }
+                break;
+            case Android:
+                mobile.show();
+                break;
+            case iOS:
+                break;
+            case Applet:
         }
     }
 
     @Override
     public void render(SpriteBatch spriteBatch, float delta) {
         elapsedTime += delta;
-        spriteBatch.draw(getCurrentAnimation().getKeyFrame(elapsedTime, true), x - (width / 2), y - (height / 2));
+        spriteBatch.draw(getCurrentAnimation().getKeyFrame(elapsedTime, true), x - (width / 2) - offset, y - (height / 2));
         spriteBatch.end();
         spriteBatch.begin();
+        computer.render(delta);
+        controller.render(delta);
         mobile.render(delta);
     }
 
@@ -72,48 +93,64 @@ public class Player extends Character {
         x = body.getPosition().x * Static.PPM;
         y = body.getPosition().y * Static.PPM;
         rectangle.setPosition(new Vector2(x - width / 2, y - height / 2));
-        inputs();
+        inputs(delta);
+
+        if (lastMove.equals("left") && (currentAnimation.equals(characterAnimation.getWalkLeft()) || currentAnimation.equals(characterAnimation.getStandLeft()))) {
+            offset = 45;
+        } else {
+            offset = 0;
+        }
     }
 
     @Override
     public void resize(int width, int height) {
+        computer.resize(width, height);
+        controller.resize(width, height);
         mobile.resize(width, height);
     }
 
-    private void inputs() {
+    private void inputs(float delta) {
+
         switch (Gdx.app.getType()) {
             case Desktop:
             case WebGL:
-                computer.inputs(ladderCollision(), stopOnLadder(), waterCollision(), ziplineCollision());
+                if (controller.getConnected()) {
+                    controller.inputs(delta, ladderCollision(), stopOnLadder(), waterCollision(), ziplineCollision());
+                } else {
+                    computer.inputs(delta, ladderCollision(), stopOnLadder(), waterCollision(), ziplineCollision());
+                }
                 break;
             case Android:
-                mobile.inputs(ladderCollision(), stopOnLadder(), waterCollision(), ziplineCollision());
+                mobile.inputs(delta, ladderCollision(), stopOnLadder(), waterCollision(), ziplineCollision());
                 break;
             case iOS:
                 break;
-        }    }
+            case Applet:
+        }
+    }
 
     @Override
     public void dispose() {
         textureAtlas.dispose();
+        computer.dispose();
+        controller.dispose();
         mobile.dispose();
     }
 
-    private boolean ladderCollision() {
+   private boolean ladderCollision() {
         return Static.getLadders().stream().anyMatch(rectangle -> this.rectangle.overlaps(rectangle));
     }
 
     private boolean stopOnLadder() {
-        int offset = 2;
+        float offset = 2;
         return Static.getStopOnLadders().stream().anyMatch(rectangle -> this.rectangle.overlaps(rectangle)
                 || (this.rectangle.y <= rectangle.y + rectangle.height + offset && this.rectangle.y >= rectangle.y + rectangle.height - offset) &&
             (this.rectangle.x < rectangle.x + rectangle.width && this.rectangle.x + this.rectangle.width > rectangle.x));
-
     }
 
     private Zipline ziplineCollision() {
         HashMap<String, ArrayList<Vector2>> allPoints = Static.getZiplines();
-        float threshold = 1.0f;
+        float threshold = 1;
 
         return allPoints.entrySet().stream()
             .filter(entry -> !entry.getValue().isEmpty())

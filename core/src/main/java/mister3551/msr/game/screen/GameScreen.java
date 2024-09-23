@@ -11,7 +11,11 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import mister3551.msr.game.Static;
 import mister3551.msr.game.characters.Collision;
-import mister3551.msr.game.characters.Player;
+import mister3551.msr.game.characters.DetectionSystem;
+import mister3551.msr.game.characters.object.Bullet;
+import mister3551.msr.game.characters.object.Enemy;
+import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.map.CleanUp;
 import mister3551.msr.game.map.TiledMapHelper;
 
 import java.util.ArrayList;
@@ -25,12 +29,19 @@ public class GameScreen implements Screen {
     private final OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private final SpriteBatch spriteBatch;
     private final Player player;
+    private final ArrayList<Enemy> enemies;
     private final Collision collision;
+    private final DetectionSystem detectionSystem;
+    private final CleanUp cleanUp;
 
     public GameScreen() {
         this.world = new World(new Vector2(0, -25), true);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.orthographicCamera = new OrthographicCamera();
+
+        Static.setEnemies(new ArrayList<>());
+        Static.setBullets(new ArrayList<>());
+        Static.setBulletsToRemove(new ArrayList<>());
 
         Static.setLadders(new ArrayList<>());
         Static.setStopOnLadders(new ArrayList<>());
@@ -41,7 +52,10 @@ public class GameScreen implements Screen {
         this.orthogonalTiledMapRenderer = tiledMapHelper.setupMap();
         this.spriteBatch = new SpriteBatch();
         this.player = Static.getPlayer();
+        this.enemies = Static.getEnemies();
         this.collision = new Collision(world, player);
+        this.detectionSystem = new DetectionSystem(world);
+        this.cleanUp = new CleanUp();
     }
 
     @Override
@@ -60,12 +74,18 @@ public class GameScreen implements Screen {
         spriteBatch.setProjectionMatrix(orthographicCamera.combined);
         spriteBatch.begin();
 
+        for (Enemy enemy : enemies) {
+            enemy.render(spriteBatch, delta);
+        }
+
+        for (Bullet bullet : Static.getBullets()) {
+            bullet.render(spriteBatch, delta);
+        }
         player.render(spriteBatch, delta);
 
         //box2DDebugRenderer.render(world, orthographicCamera.combined.scl(Static.PPM));
 
         spriteBatch.end();
-
         update(delta);
     }
 
@@ -93,6 +113,14 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         player.dispose();
+
+        for (Enemy enemy : enemies) {
+            enemy.dispose();
+        }
+
+        for (Bullet bullet : Static.getBullets()) {
+            bullet.dispose();
+        }
     }
 
     private void update(float delta) {
@@ -101,7 +129,18 @@ public class GameScreen implements Screen {
         cameraOnPlayer();
 
         collision.collide();
+
         player.update(delta);
+
+        for (Enemy enemy : enemies) {
+            enemy.update(delta);
+            detectionSystem.isDetected(player, enemy);
+        }
+
+        for (Bullet bullet : Static.getBullets()) {
+            bullet.update();
+        }
+        cleanUp.cleanUpBullets();
     }
 
     private void cameraOnPlayer() {
