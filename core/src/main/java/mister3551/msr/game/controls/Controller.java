@@ -2,33 +2,20 @@ package mister3551.msr.game.controls;
 
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import mister3551.msr.game.characters.object.Player;
-import mister3551.msr.game.controls.zipline.OnZipline;
-import mister3551.msr.game.controls.zipline.Zipline;
+import mister3551.msr.game.controls.movement.OnZipline;
+import mister3551.msr.game.controls.movement.Zipline;
 
 import java.util.ArrayList;
 
 public class Controller extends Device implements ControllerListener {
 
     private com.badlogic.gdx.controllers.Controller controller;
-    private final Viewport viewport;
-    private final Stage stage;
-    private Label reloadingLabel;
 
     public Controller(Body body, Player player) {
         super(body, player);
-        this.viewport = new ExtendViewport(800, 480);
-        this.stage = new Stage(viewport);
         Controllers.addListener(this);
     }
 
@@ -38,17 +25,6 @@ public class Controller extends Device implements ControllerListener {
             if (Controllers.getControllers().size > 0) {
                 controller = Controllers.getControllers().first();
             }
-
-            Table table = new Table();
-            table.setFillParent(true);
-
-            reloadingLabel = new Label("Reloading...", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-            reloadingLabel.setVisible(false);
-
-            table.right();
-            table.add(reloadingLabel).pad(10);
-
-            stage.addActor(table);
         }
 
         if (controller != null) {
@@ -58,18 +34,16 @@ public class Controller extends Device implements ControllerListener {
 
     @Override
     public void render(float delta) {
-        stage.act(delta);
-        stage.draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
         if (controller != null) {
             controller.removeListener(this);
         }
@@ -148,22 +122,12 @@ public class Controller extends Device implements ControllerListener {
             }
 
             //TODO does not work in html but work in lwjgl3
-            if (controller.getAxis(4) == 0.8f && shots < player.getWeapon().getMagazineCapacity() && isShooting) {
-                shots += player.getOnShoot().shoot(player, delta);
+            if (controller.getAxis(4) > 0.8f && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
+                player.getWeapon().setActiveMagazineCapacity(player.getWeapon().getActiveMagazineCapacity() - player.getOnShoot().shoot(player, delta));
             }
 
-            if (controller.getButton(9) && shots != 0) {
-                isShooting = false;
-                reloadingLabel.setVisible(true);
-
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        shots = 0;
-                        isShooting = true;
-                        reloadingLabel.setVisible(false);
-                    }
-                }, 3);
+            if (controller.getButton(9) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
+                player.getOnShoot().reload(this, player);
             }
         }
     }
@@ -208,7 +172,6 @@ public class Controller extends Device implements ControllerListener {
 
     @Override
     public boolean axisMoved(com.badlogic.gdx.controllers.Controller controller, int axisCode, float value) {
-        System.out.println(axisCode);
         return false;
     }
 

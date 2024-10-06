@@ -21,6 +21,7 @@ public class Bullet extends Ammunition {
         this.speed = 20;
         this.sprite = new Sprite(new Texture("maps/tiles/character/enemy/enemy.png"));
         this.weapon = weapon;
+        this.damage = weapon.getDamage();
         this.startX = body.getPosition().x;
     }
 

@@ -1,6 +1,5 @@
 package mister3551.msr.game.characters.object;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,7 +11,7 @@ import mister3551.msr.game.characters.CharacterAnimation;
 import mister3551.msr.game.controls.Computer;
 import mister3551.msr.game.controls.Controller;
 import mister3551.msr.game.controls.Mobile;
-import mister3551.msr.game.controls.zipline.Zipline;
+import mister3551.msr.game.controls.movement.Zipline;
 import mister3551.msr.game.map.ObjectData;
 
 import java.util.*;
@@ -23,7 +22,7 @@ public class Player extends Character {
     private final Mobile mobile;
     private final Controller controller;
     private float elapsedTime = 0;
-    private float offset;
+    private boolean reloading = false;
 
     public Player(Body body, Rectangle rectangle, Weapon weapon, ObjectData objectData) {
         super(body, rectangle, weapon, objectData.getWidth(), objectData.getHeight());
@@ -95,11 +94,9 @@ public class Player extends Character {
         rectangle.setPosition(new Vector2(x - width / 2, y - height / 2));
         inputs(delta);
 
-        if (lastMove.equals("left") && (currentAnimation.equals(characterAnimation.getWalkLeft()) || currentAnimation.equals(characterAnimation.getStandLeft()))) {
-            offset = 45;
-        } else {
-            offset = 0;
-        }
+        offset = lastMove.equals("left")
+            && (currentAnimation.equals(characterAnimation.getWalkLeft())
+            || currentAnimation.equals(characterAnimation.getStandLeft())) ? 45 : 0;
     }
 
     @Override
@@ -137,7 +134,7 @@ public class Player extends Character {
         mobile.dispose();
     }
 
-   private boolean ladderCollision() {
+    private boolean ladderCollision() {
         return Static.getLadders().stream().anyMatch(rectangle -> this.rectangle.overlaps(rectangle));
     }
 
@@ -162,5 +159,13 @@ public class Player extends Character {
 
     private boolean waterCollision() {
         return Static.getWaters().stream().anyMatch(rectangle -> this.rectangle.overlaps(rectangle));
+    }
+
+    public boolean isReloading() {
+        return reloading;
+    }
+
+    public void setReloading(boolean reloading) {
+        this.reloading = reloading;
     }
 }

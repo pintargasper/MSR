@@ -3,7 +3,7 @@ package mister3551.msr.game.controls;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import mister3551.msr.game.characters.object.Player;
-import mister3551.msr.game.controls.zipline.Zipline;
+import mister3551.msr.game.controls.movement.Zipline;
 
 import java.util.ArrayList;
 
@@ -12,13 +12,11 @@ public abstract class Device {
     protected final Body body;
     protected final Player player;
     protected Zipline zipline;
-    protected int shots;
     protected boolean isShooting;
 
     public Device(Body body, Player player) {
         this.body = body;
         this.player = player;
-        this.shots = 0;
         this.isShooting = true;
     }
 
@@ -37,5 +35,9 @@ public abstract class Device {
 
     public void setZipline(Zipline zipline) {
         this.zipline = zipline;
+    }
+
+    public void setShooting(boolean shooting) {
+        isShooting = shooting;
     }
 }

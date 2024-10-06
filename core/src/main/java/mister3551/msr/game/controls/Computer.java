@@ -2,62 +2,38 @@ package mister3551.msr.game.controls;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import mister3551.msr.game.characters.object.Player;
-import mister3551.msr.game.controls.zipline.OnZipline;
-import mister3551.msr.game.controls.zipline.Zipline;
+import mister3551.msr.game.controls.movement.OnZipline;
+import mister3551.msr.game.controls.movement.Zipline;
 
 import java.util.ArrayList;
 
 public class Computer extends Device {
 
-    private final Viewport viewport;
-    private final Stage stage;
-    private Label reloadingLabel;
-
     public Computer(Body body, Player player) {
         super(body, player);
-        this.viewport = new ExtendViewport(800, 480);
-        this.stage = new Stage(viewport);
     }
 
     @Override
     public void show() {
-        Table table = new Table();
-        table.setFillParent(true);
 
-        reloadingLabel = new Label("Reloading...", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        reloadingLabel.setVisible(false);
-
-        table.right();
-        table.add(reloadingLabel).pad(10);
-
-        stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        stage.act(delta);
-        stage.draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
+
     }
 
     @Override
@@ -130,22 +106,12 @@ public class Computer extends Device {
             body.setLinearVelocity(player.getVelocityX() * player.getSpeed(), Math.min(body.getLinearVelocity().y, 25));
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && shots < player.getWeapon().getMagazineCapacity() && isShooting) {
-            shots += player.getOnShoot().shoot(player, delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
+            player.getWeapon().setActiveMagazineCapacity(player.getWeapon().getActiveMagazineCapacity() - player.getOnShoot().shoot(player, delta));
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R) && shots != 0) {
-            isShooting = false;
-            reloadingLabel.setVisible(true);
-
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    shots = 0;
-                    isShooting = true;
-                    reloadingLabel.setVisible(false);
-                }
-            }, 3);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
+            player.getOnShoot().reload(this, player);
         }
     }
 

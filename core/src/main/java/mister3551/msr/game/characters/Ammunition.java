@@ -11,12 +11,12 @@ public abstract class Ammunition {
     protected float x;
     protected float y;
     protected int speed;
+    protected int damage;
 
     public Ammunition(Body body) {
         this.body = body;
         this.width = 20;
         this.height = 10;
-        this.speed = 10;
     }
 
     public abstract void render(SpriteBatch spriteBatch, float delta);
@@ -25,5 +25,9 @@ public abstract class Ammunition {
 
     public Body getBody() {
         return body;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

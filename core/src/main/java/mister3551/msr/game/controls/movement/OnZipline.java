@@ -1,4 +1,4 @@
-package mister3551.msr.game.controls.zipline;
+package mister3551.msr.game.controls.movement;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;

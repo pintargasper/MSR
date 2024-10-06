@@ -8,6 +8,8 @@ public class Weapon {
     private final int range;
     private final int fireRate;
     private final int magazineCapacity;
+    private int activeMagazineCapacity;
+    private int backupMagazinesCapacity;
 
     public Weapon(String name, int damage, int accuracy, int range, int fireRate, int magazineCapacity) {
         this.name = name;
@@ -16,6 +18,8 @@ public class Weapon {
         this.range = range;
         this.fireRate = fireRate;
         this.magazineCapacity = magazineCapacity;
+        this.activeMagazineCapacity = magazineCapacity;
+        this.backupMagazinesCapacity = magazineCapacity;
     }
 
     public String getName() {
@@ -40,5 +44,21 @@ public class Weapon {
 
     public int getMagazineCapacity() {
         return magazineCapacity;
+    }
+
+    public int getActiveMagazineCapacity() {
+        return activeMagazineCapacity;
+    }
+
+    public void setActiveMagazineCapacity(int activeMagazineCapacity) {
+        this.activeMagazineCapacity = activeMagazineCapacity;
+    }
+
+    public int getBackupMagazinesCapacity() {
+        return backupMagazinesCapacity;
+    }
+
+    public void setBackupMagazinesCapacity(int backupMagazinesCapacity) {
+        this.backupMagazinesCapacity = backupMagazinesCapacity;
     }
 }

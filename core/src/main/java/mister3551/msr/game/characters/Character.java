@@ -24,16 +24,19 @@ public abstract class Character {
     protected float y;
     protected float velocityX;
     protected float velocityY;
+    protected float offset;
     protected int live;
     protected float speed;
     protected float speedOnLadder;
     protected float speedOnZipline;
     protected int jumps;
+    protected int shots;
     protected boolean bodyOnFloor;
     protected boolean onFloor;
     protected boolean onLeftSide;
     protected boolean onRightSide;
     protected String lastMove;
+    protected boolean bulletComing;
 
     public Character(Body body, Rectangle rectangle, Weapon weapon, float width, float height) {
         this.body = body;
@@ -51,6 +54,7 @@ public abstract class Character {
         this.speedOnLadder = 0;
         this.speedOnZipline = 0;
         this.jumps = 0;
+        this.shots = 0;
         this.bodyOnFloor = false;
         this.onFloor = false;
         this.lastMove = "right";
@@ -118,6 +122,18 @@ public abstract class Character {
         this.velocityY = velocityY;
     }
 
+    public void setOffset(float offset) {
+        this.offset = offset;
+    }
+
+    public int getLive() {
+        return live;
+    }
+
+    public void setLive(int live) {
+        this.live = live;
+    }
+
     public float getSpeed() {
         return speed;
     }
@@ -136,6 +152,14 @@ public abstract class Character {
 
     public void setJumps(int jumps) {
         this.jumps = jumps;
+    }
+
+    public int getShots() {
+        return shots;
+    }
+
+    public void setShots(int shots) {
+        this.shots = shots;
     }
 
     public boolean isBodyOnFloor() {
@@ -176,5 +200,13 @@ public abstract class Character {
 
     public void setLastMove(String lastMove) {
         this.lastMove = lastMove;
+    }
+
+    public boolean isBulletComing() {
+        return bulletComing;
+    }
+
+    public void setBulletComing(boolean bulletComing) {
+        this.bulletComing = bulletComing;
     }
 }

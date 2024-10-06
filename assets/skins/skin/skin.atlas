@@ -1,0 +1,192 @@
+
+skin.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+white-pixel
+  rotate: false
+  xy: 2029, 2027
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+background
+  rotate: false
+  xy: 1, 1123
+  size: 1899, 905
+  orig: 1899, 905
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 1, 878
+  size: 150, 46
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button
+  rotate: false
+  xy: 1, 878
+  size: 150, 46
+  split: 16, 16, 0, 0
+  pad: 16, 16, 1, 1
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+button-over
+  rotate: false
+  xy: 1, 830
+  size: 150, 46
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button-over
+  rotate: false
+  xy: 1, 830
+  size: 150, 46
+  split: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+check-box-of
+  rotate: false
+  xy: 214, 955
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+check-box-on
+  rotate: false
+  xy: 266, 986
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+scrool-pane-h-scroll-knob
+  rotate: false
+  xy: 509, 1108
+  size: 30, 13
+  orig: 30, 13
+  offset: 0, 0
+  index: -1
+scrool-pane-v-scroll-knob
+  rotate: false
+  xy: 153, 894
+  size: 13, 30
+  orig: 13, 30
+  offset: 0, 0
+  index: -1
+text-field-background
+  rotate: false
+  xy: 266, 1038
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+list-background
+  rotate: false
+  xy: 266, 1038
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 5, 5
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+select-box-background
+  rotate: false
+  xy: 266, 1038
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+text-tool-tip-background
+  rotate: false
+  xy: 266, 1038
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+touchpad-background
+  rotate: false
+  xy: 1902, 1903
+  size: 125, 125
+  orig: 125, 125
+  offset: 0, 0
+  index: -1
+touchpad-knob
+  rotate: false
+  xy: 1902, 1652
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 1, 596
+  size: 91, 115
+  orig: 91, 115
+  offset: 0, 0
+  index: -1
+reload
+  rotate: false
+  xy: 1902, 1786
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+shoot
+  rotate: false
+  xy: 1, 713
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+OpenSans-Italic-VariableFont_wdth,wght
+  rotate: false
+  xy: 1, 1088
+  size: 506, 33
+  orig: 506, 33
+  offset: 0, 0
+  index: -1
+logo-text
+  rotate: false
+  xy: 1, 926
+  size: 211, 79
+  orig: 211, 79
+  offset: 0, 0
+  index: -1
+enemy
+  rotate: false
+  xy: 1, 525
+  size: 66, 69
+  orig: 66, 69
+  offset: 0, 0
+  index: -1
+heart
+  rotate: false
+  xy: 476, 1056
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+hostage
+  rotate: false
+  xy: 1902, 1714
+  size: 66, 70
+  orig: 66, 70
+  offset: 0, 0
+  index: -1
+mission-text
+  rotate: false
+  xy: 1, 1007
+  size: 263, 79
+  orig: 263, 79
+  offset: 0, 0
+  index: -1

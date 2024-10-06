@@ -3,9 +3,9 @@ package mister3551.msr.game.characters;
 import com.badlogic.gdx.physics.box2d.*;
 import mister3551.msr.game.Static;
 import mister3551.msr.game.characters.object.Bullet;
+import mister3551.msr.game.characters.object.Enemy;
 import mister3551.msr.game.characters.object.Player;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Collision {
@@ -51,6 +51,20 @@ public class Collision {
                     player.setBodyOnFloor(true);
                 }
 
+                for (Enemy enemy : Static.getEnemies()) {
+                    if (fixtureA.getUserData() != null && (fixtureA.getUserData().equals(enemy.getName().toLowerCase() + "-foot"))) {
+                        enemy.setBodyOnFloor(true);
+                    } else if (fixtureB.getUserData() != null && (fixtureB.getUserData().equals(enemy.getName().toLowerCase() + "-foot"))) {
+                        enemy.setBodyOnFloor(true);
+                    }
+
+                    if (fixtureA.getUserData() != null && (fixtureA.getUserData().equals(enemy.getName().toLowerCase() + "-foot-backup"))) {
+                        enemy.setOnFloor(true);
+                    } else if (fixtureB.getUserData() != null && (fixtureB.getUserData().equals(enemy.getName().toLowerCase() + "-foot-backup"))) {
+                        enemy.setOnFloor(true);
+                    }
+                }
+
                 if ((Objects.equals(fixtureA.getBody().getUserData(), "bullet") && Objects.equals(fixtureB.getBody().getType(), BodyDef.BodyType.StaticBody))
                     || Objects.equals(fixtureB.getBody().getUserData(), "bullet") && Objects.equals(fixtureA.getBody().getType(), BodyDef.BodyType.StaticBody)) {
 
@@ -64,7 +78,33 @@ public class Collision {
                 if (fixtureA.getBody().getUserData() != null && fixtureB.getBody().getUserData() != null) {
                     String fixture = fixtureA.getBody().getUserData().toString() + "-" + fixtureB.getBody().getUserData().toString();
 
-                    if (fixture.equals("bullet-Enemy") || fixture.equals("Enemy-bullet")) {
+                    if (fixture.startsWith("bullet-Enemy") || fixture.matches("Enemy\\d*-bullet")) {
+                        for (Bullet bullet : Static.getBullets()) {
+                            if (bullet.getBody() == fixtureA.getBody() || bullet.getBody() == fixtureB.getBody()) {
+                                for (Enemy enemy : Static.getEnemies()) {
+                                    if (enemy.getBody() == fixtureA.getBody() || enemy.getBody() == fixtureB.getBody()) {
+                                        if (enemy.getLive() - bullet.getDamage() > 0) {
+                                            enemy.setLive(enemy.getLive() - bullet.getDamage());
+                                        } else {
+                                            Static.getEnemiesToRemove().add(enemy);
+                                        }
+                                    }
+                                }
+                                Static.getBulletsToRemove().add(bullet);
+                            }
+                        }
+                    }
+
+                    if (fixture.startsWith("bullet-Player") || fixture.matches("Player-bullet")) {
+                        for (Bullet bullet : Static.getBullets()) {
+                            if (player.getBody() == fixtureA.getBody() || player.getBody() == fixtureB.getBody()) {
+                                player.setLive(Math.max(player.getLive() - bullet.getDamage(), 0));
+                                Static.getBulletsToRemove().add(bullet);
+                            }
+                        }
+                    }
+
+                    if (fixture.matches("bullet-bullet")) {
                         for (Bullet bullet : Static.getBullets()) {
                             if (bullet.getBody() == fixtureA.getBody() || bullet.getBody() == fixtureB.getBody()) {
                                 Static.getBulletsToRemove().add(bullet);
@@ -101,6 +141,26 @@ public class Collision {
                     player.setOnFloor(false);
                 } else if (fixtureB.getUserData() != null && fixtureB.getUserData().equals("player-foot-backup")) {
                     player.setOnFloor(false);
+                }
+
+                if (fixtureA.getUserData() != null && fixtureA.getUserData().equals("player-foot-backup")) {
+                    player.setOnFloor(false);
+                } else if (fixtureB.getUserData() != null && fixtureB.getUserData().equals("player-foot-backup")) {
+                    player.setOnFloor(false);
+                }
+
+                for (Enemy enemy : Static.getEnemies()) {
+                    if (fixtureA.getUserData() != null && (fixtureA.getUserData().equals(enemy.getName().toLowerCase() + "-foot"))) {
+                        enemy.setBodyOnFloor(false);
+                    } else if (fixtureB.getUserData() != null && (fixtureB.getUserData().equals(enemy.getName().toLowerCase() + "-foot"))) {
+                        enemy.setBodyOnFloor(false);
+                    }
+
+                    if (fixtureA.getUserData() != null && (fixtureA.getUserData().equals(enemy.getName().toLowerCase() + "-foot-backup"))) {
+                        enemy.setOnFloor(false);
+                    } else if (fixtureB.getUserData() != null && (fixtureB.getUserData().equals(enemy.getName().toLowerCase() + "-foot-backup"))) {
+                        enemy.setOnFloor(false);
+                    }
                 }
             }
 

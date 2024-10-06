@@ -40,12 +40,14 @@ public class TiledMapHelper {
         MapObjects ladders = components.getLayers().get("Ladder").getObjects();
         MapObjects ziplines = components.getLayers().get("Zipline").getObjects();
         MapObjects water = components.getLayers().get("Water").getObjects();
+        MapObjects enemyMovement = components.getLayers().get("EnemyMovement").getObjects();
 
         parseMapObject(mapObjects);
         parseCharacters(characters);
         parseLadders(ladders);
         parseZipline(ziplines);
         parseWater(water);
+        parseEnemyMovement(enemyMovement);
         return new OrthogonalTiledMapRenderer(tiledMap);
     }
 
@@ -54,6 +56,10 @@ public class TiledMapHelper {
         for (MapObject mapObject : mapObjects) {
             if (mapObject instanceof PolygonMapObject) {
                 bodyHelper.staticBody((PolygonMapObject) mapObject);
+            } else if (mapObject instanceof RectangleMapObject) {
+                if (mapObject.getName().equals("End")) {
+                    Static.setEnd(((RectangleMapObject) mapObject).getRectangle());
+                }
             }
         }
     }
@@ -70,7 +76,7 @@ public class TiledMapHelper {
                     body.setUserData(mapObject.getName());
                     Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
                     Static.setPlayer(new Player(body, rectangle, weapon, objectData));
-                } else if (mapObject.getName() != null && mapObject.getName().equals("Enemy")) {
+                } else if (mapObject.getName() != null && mapObject.getName().startsWith("Enemy")) {
                     ObjectData objectData = objectData(mapObject);
 
                     Weapon weapon = new Weapon("RPK-74", 36, 43, 50, 650, 45);
@@ -78,7 +84,7 @@ public class TiledMapHelper {
                     Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
                     body.setUserData(mapObject.getName());
                     Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
-                    Static.getEnemies().add(new Enemy(body, rectangle, weapon, objectData));
+                    Static.getEnemies().add(new Enemy(body, rectangle, weapon, objectData, mapObject.getName()));
                 }
             }
         }
@@ -139,6 +145,38 @@ public class TiledMapHelper {
                 Static.getWaters().add(rectangle);
             }
         }
+    }
+
+    private void parseEnemyMovement(MapObjects mapObjects) {
+        Map<String, List<Vector2>> temporaryMap = new HashMap<>();
+        Map<String, List<Integer>> sortKeysMap = new HashMap<>();
+
+        for (MapObject mapObject : mapObjects) {
+            String name = mapObject.getName();
+            if (name != null && name.startsWith("Enemy")) {
+                String[] parts = name.split("-");
+                if (parts.length == 2) {
+                    String key = parts[0];
+                    int sortKey = Integer.parseInt(parts[1]);
+
+                    Vector2 coordinates = Converter.coordinates(((RectangleMapObject) mapObject).getRectangle());
+                    temporaryMap.computeIfAbsent(key, value -> new ArrayList<>()).add(coordinates);
+                    sortKeysMap.computeIfAbsent(key, value -> new ArrayList<>()).add(sortKey);
+                }
+            }
+        }
+
+        temporaryMap.forEach((key, rectangles) -> {
+            List<Integer> sortKeys = sortKeysMap.get(key);
+
+            List<Vector2> sortedVectors = IntStream.range(0, rectangles.size())
+                .boxed()
+                .sorted(Comparator.comparing(sortKeys::get))
+                .map(rectangles::get)
+                .collect(Collectors.toList());
+
+            Static.getEnemyMovement().put(key, new ArrayList<>(sortedVectors));
+        });
     }
 
     private ObjectData objectData(MapObject mapObject) {
