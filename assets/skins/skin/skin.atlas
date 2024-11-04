@@ -4,82 +4,135 @@ size: 2048, 2048
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
-white-pixel
-  rotate: false
-  xy: 2029, 2027
-  size: 1, 1
-  orig: 1, 1
-  offset: 0, 0
-  index: -1
 background
   rotate: false
-  xy: 1, 1123
+  xy: 1, 993
   size: 1899, 905
   orig: 1899, 905
   offset: 0, 0
   index: -1
-button
+masterminds_puzzle_palace
   rotate: false
-  xy: 1, 878
-  size: 150, 46
-  orig: 150, 46
+  xy: 1, 600
+  size: 1187, 391
+  orig: 1187, 391
   offset: 0, 0
   index: -1
-text-button
+training
   rotate: false
-  xy: 1, 878
-  size: 150, 46
-  split: 16, 16, 0, 0
-  pad: 16, 16, 1, 1
-  orig: 150, 46
+  xy: 1, 209
+  size: 1182, 389
+  orig: 1182, 389
+  offset: 0, 0
+  index: -1
+
+skin2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+white-pixel
+  rotate: false
+  xy: 1164, 1665
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1
 button-over
   rotate: false
-  xy: 1, 830
+  xy: 213, 72
   size: 150, 46
   orig: 150, 46
   offset: 0, 0
   index: -1
 text-button-over
   rotate: false
-  xy: 1, 830
+  xy: 213, 72
   size: 150, 46
-  split: 16, 16, 0, 0
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
   orig: 150, 46
   offset: 0, 0
   index: -1
 check-box-of
   rotate: false
-  xy: 214, 955
+  xy: 1579, 1795
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 check-box-on
   rotate: false
-  xy: 266, 986
+  xy: 1026, 1169
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 scrool-pane-h-scroll-knob
   rotate: false
-  xy: 509, 1108
+  xy: 1115, 1648
+  size: 30, 13
+  orig: 30, 13
+  offset: 0, 0
+  index: -1
+split-pane-vertical-handle
+  rotate: false
+  xy: 1115, 1648
   size: 30, 13
   orig: 30, 13
   offset: 0, 0
   index: -1
 scrool-pane-v-scroll-knob
   rotate: false
-  xy: 153, 894
+  xy: 493, 850
   size: 13, 30
   orig: 13, 30
   offset: 0, 0
   index: -1
+split-pane-horizontal-handle
+  rotate: false
+  xy: 493, 850
+  size: 13, 30
+  orig: 13, 30
+  offset: 0, 0
+  index: -1
+text-button-up
+  rotate: false
+  xy: 766, 854
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+button-up
+  rotate: false
+  xy: 766, 854
+  size: 150, 46
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button-over-navigation
+  rotate: false
+  xy: 365, 72
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button-up-navigation
+  rotate: false
+  xy: 1422, 1718
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
 text-field-background
   rotate: false
-  xy: 266, 1038
+  xy: 766, 902
   size: 208, 48
   split: 0, 0, 0, 0
   pad: 16, 16, 0, 0
@@ -88,7 +141,7 @@ text-field-background
   index: -1
 list-background
   rotate: false
-  xy: 266, 1038
+  xy: 766, 902
   size: 208, 48
   split: 0, 0, 0, 0
   pad: 16, 16, 5, 5
@@ -97,7 +150,7 @@ list-background
   index: -1
 select-box-background
   rotate: false
-  xy: 266, 1038
+  xy: 766, 902
   size: 208, 48
   split: 0, 0, 0, 0
   pad: 16, 16, 0, 0
@@ -106,7 +159,7 @@ select-box-background
   index: -1
 text-tool-tip-background
   rotate: false
-  xy: 266, 1038
+  xy: 766, 902
   size: 208, 48
   split: 0, 0, 0, 0
   pad: 16, 16, 0, 0
@@ -115,78 +168,190 @@ text-tool-tip-background
   index: -1
 touchpad-background
   rotate: false
-  xy: 1902, 1903
+  xy: 493, 695
   size: 125, 125
   orig: 125, 125
   offset: 0, 0
   index: -1
 touchpad-knob
   rotate: false
-  xy: 1902, 1652
+  xy: 493, 399
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 jump
   rotate: false
-  xy: 1, 596
+  xy: 493, 461
   size: 91, 115
   orig: 91, 115
   offset: 0, 0
   index: -1
 reload
   rotate: false
-  xy: 1902, 1786
+  xy: 493, 578
   size: 114, 115
   orig: 114, 115
   offset: 0, 0
   index: -1
 shoot
   rotate: false
-  xy: 1, 713
+  xy: 620, 705
   size: 114, 115
   orig: 114, 115
   offset: 0, 0
   index: -1
 OpenSans-Italic-VariableFont_wdth,wght
   rotate: false
-  xy: 1, 1088
-  size: 506, 33
-  orig: 506, 33
+  xy: 1164, 2009
+  size: 506, 38
+  orig: 506, 38
+  offset: 0, 0
+  index: -1
+OpenSans-Italic-VariableFont_wdth,wght_big_font
+  rotate: false
+  xy: 1, 882
+  size: 505, 68
+  orig: 505, 68
+  offset: 0, 0
+  index: -1
+exploration_expedition
+  rotate: false
+  xy: 1, 1663
+  size: 1161, 384
+  orig: 1161, 384
+  offset: 0, 0
+  index: -1
+on_your_own
+  rotate: false
+  xy: 1, 1293
+  size: 1112, 368
+  orig: 1112, 368
+  offset: 0, 0
+  index: -1
+ultimate_challenge_quest
+  rotate: false
+  xy: 1, 952
+  size: 1023, 339
+  orig: 1023, 339
+  offset: 0, 0
+  index: -1
+credits-text
+  rotate: false
+  xy: 1, 39
+  size: 210, 79
+  orig: 210, 79
+  offset: 0, 0
+  index: -1
+gear-text
+  rotate: false
+  xy: 1422, 1766
+  size: 155, 79
+  orig: 155, 79
+  offset: 0, 0
+  index: -1
+missions-text
+  rotate: false
+  xy: 1164, 1928
+  size: 261, 79
+  orig: 261, 79
+  offset: 0, 0
+  index: -1
+options-text
+  rotate: false
+  xy: 1427, 1928
+  size: 231, 79
+  orig: 231, 79
+  offset: 0, 0
+  index: -1
+92fs
+  rotate: false
+  xy: 1164, 1798
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+arm
+  rotate: false
+  xy: 1, 120
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+fn57
+  rotate: false
+  xy: 1164, 1668
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+m67-frag
+  rotate: false
+  xy: 259, 250
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+ro933
+  rotate: false
+  xy: 259, 120
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+rpk-74
+  rotate: false
+  xy: 1, 250
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+scorpion
+  rotate: false
+  xy: 508, 822
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+loading
+  rotate: false
+  xy: 1, 380
+  size: 490, 500
+  orig: 490, 500
   offset: 0, 0
   index: -1
 logo-text
   rotate: false
-  xy: 1, 926
+  xy: 1422, 1847
   size: 211, 79
   orig: 211, 79
   offset: 0, 0
   index: -1
+bullet
+  rotate: false
+  xy: 1672, 2017
+  size: 50, 30
+  orig: 50, 30
+  offset: 0, 0
+  index: -1
 enemy
   rotate: false
-  xy: 1, 525
+  xy: 213, 1
   size: 66, 69
   orig: 66, 69
   offset: 0, 0
   index: -1
 heart
   rotate: false
-  xy: 476, 1056
+  xy: 976, 920
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 hostage
   rotate: false
-  xy: 1902, 1714
+  xy: 1026, 1221
   size: 66, 70
   orig: 66, 70
-  offset: 0, 0
-  index: -1
-mission-text
-  rotate: false
-  xy: 1, 1007
-  size: 263, 79
-  orig: 263, 79
   offset: 0, 0
   index: -1

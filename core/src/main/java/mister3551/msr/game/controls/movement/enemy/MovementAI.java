@@ -14,7 +14,7 @@ public class MovementAI {
     private boolean movingForward = true;
     private boolean retreat = false;
 
-    //TODO "v redu, ampak treba izboljšati še izmikanje...
+    //TODO okay, but dodging still needs to be improved...
     public void movement(Enemy enemy, ArrayList<Vector2> points, boolean ladderCollision, boolean swimming, boolean playerDetected, float delta, float speed) {
         if (points.size() < 2) {
             return;

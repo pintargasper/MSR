@@ -31,8 +31,8 @@ public class TiledMapHelper {
         Static.setBodyHelper(bodyHelper);
     }
 
-    public OrthogonalTiledMapRenderer setupMap() {
-        TiledMap tiledMap = new TmxMapLoader().load("maps/training.tmx");
+    public OrthogonalTiledMapRenderer setupMap(String mapName) {
+        TiledMap tiledMap = new TmxMapLoader().load("maps/" + mapName);
 
         MapGroupLayer components = (MapGroupLayer) tiledMap.getLayers().get("Components");
         MapObjects mapObjects = tiledMap.getLayers().get("Objects").getObjects();

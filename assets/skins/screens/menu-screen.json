@@ -42,11 +42,11 @@
 			{
 				"child": {
 					"class": "TextButton",
-					"name": "textButtonCampaign",
+					"name": null,
 					"text": "Campaign",
 					"style": {
 						"clazz": "com.badlogic.gdx.scenes.scene2d.ui.TextButton",
-						"name": "default"
+						"name": "navigation"
 					},
 					"checked": false,
 					"disabled": false,
@@ -88,11 +88,11 @@
 			{
 				"child": {
 					"class": "TextButton",
-					"name": "textButtonMultiplayer",
+					"name": null,
 					"text": "Multiplayer",
 					"style": {
 						"clazz": "com.badlogic.gdx.scenes.scene2d.ui.TextButton",
-						"name": "default"
+						"name": "navigation"
 					},
 					"checked": false,
 					"disabled": false,
@@ -134,11 +134,11 @@
 			{
 				"child": {
 					"class": "TextButton",
-					"name": "textButtonOptions",
+					"name": null,
 					"text": "Options",
 					"style": {
 						"clazz": "com.badlogic.gdx.scenes.scene2d.ui.TextButton",
-						"name": "default"
+						"name": "navigation"
 					},
 					"checked": false,
 					"disabled": false,
@@ -180,11 +180,11 @@
 			{
 				"child": {
 					"class": "TextButton",
-					"name": "textButtonCredits",
+					"name": null,
 					"text": "Credits",
 					"style": {
 						"clazz": "com.badlogic.gdx.scenes.scene2d.ui.TextButton",
-						"name": "default"
+						"name": "navigation"
 					},
 					"checked": false,
 					"disabled": false,

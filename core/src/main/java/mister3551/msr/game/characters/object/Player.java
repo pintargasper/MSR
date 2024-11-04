@@ -30,9 +30,9 @@ public class Player extends Character {
         this.speedOnLadder = 5;
         this.speedOnZipline = 15;
         this.jumps = 1;
-        this.computer = new Computer(body, this);
-        this.mobile = new Mobile(body, this);
-        this.controller = new Controller(body, this);
+        this.computer = new Computer(body, this, Static.getOptions());
+        this.mobile = new Mobile(body, this, Static.getOptions());
+        this.controller = new Controller(body, this, Static.getOptions());
         this.textureAtlas = new TextureAtlas("maps/tiles/character/player/atlas/player.atlas");
         this.characterAnimation = new CharacterAnimation(
             textureAtlas,
@@ -48,6 +48,8 @@ public class Player extends Character {
             "player_climb2",
             "player_fly_left",
             "player_fly_right",
+            "player_jump_left",
+            "player_jump_right",
             "player_swim_left1",
             "player_swim_left2",
             "player_swim_right1",
@@ -96,7 +98,8 @@ public class Player extends Character {
 
         offset = lastMove.equals("left")
             && (currentAnimation.equals(characterAnimation.getWalkLeft())
-            || currentAnimation.equals(characterAnimation.getStandLeft())) ? 45 : 0;
+            || currentAnimation.equals(characterAnimation.getStandLeft())
+            || currentAnimation.equals(characterAnimation.getJumpLeft())) ? 45 : 0;
     }
 
     @Override

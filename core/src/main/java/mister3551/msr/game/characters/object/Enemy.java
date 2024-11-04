@@ -44,6 +44,8 @@ public class Enemy extends Character {
             "enemy_climb2",
             "enemy_fly_left",
             "enemy_fly_right",
+            "enemy_jump_left",
+            "enemy_jump_right",
             "enemy_swim_left1",
             "enemy_swim_left2",
             "enemy_swim_right1",

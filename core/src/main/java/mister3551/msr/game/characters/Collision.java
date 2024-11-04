@@ -77,7 +77,6 @@ public class Collision {
 
                 if (fixtureA.getBody().getUserData() != null && fixtureB.getBody().getUserData() != null) {
                     String fixture = fixtureA.getBody().getUserData().toString() + "-" + fixtureB.getBody().getUserData().toString();
-
                     if (fixture.startsWith("bullet-Enemy") || fixture.matches("Enemy\\d*-bullet")) {
                         for (Bullet bullet : Static.getBullets()) {
                             if (bullet.getBody() == fixtureA.getBody() || bullet.getBody() == fixtureB.getBody()) {
@@ -87,6 +86,7 @@ public class Collision {
                                             enemy.setLive(enemy.getLive() - bullet.getDamage());
                                         } else {
                                             Static.getEnemiesToRemove().add(enemy);
+                                            Static.getStatistics().setScore(Static.getStatistics().getScore() + 100);
                                         }
                                     }
                                 }

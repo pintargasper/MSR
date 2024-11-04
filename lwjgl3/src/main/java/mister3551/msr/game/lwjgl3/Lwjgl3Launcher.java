@@ -20,7 +20,10 @@ public class Lwjgl3Launcher {
         configuration.setTitle("MSR");
         configuration.useVsync(true);
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-        configuration.setWindowedMode(640, 480);
+
+        //configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+        //configuration.setDecorated(false);
+
         configuration.setWindowIcon("logo/logo128.png", "logo/logo64.png", "logo/logo32.png", "logo/logo16.png");
         return configuration;
     }

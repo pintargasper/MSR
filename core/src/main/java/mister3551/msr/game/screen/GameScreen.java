@@ -10,31 +10,31 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import mister3551.msr.game.Static;
 import mister3551.msr.game.characters.Collision;
 import mister3551.msr.game.characters.DetectionSystem;
 import mister3551.msr.game.characters.object.Bullet;
 import mister3551.msr.game.characters.object.Enemy;
 import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.database.object.Statistics;
 import mister3551.msr.game.map.CleanUp;
 import mister3551.msr.game.map.Converter;
 import mister3551.msr.game.map.TiledMapHelper;
 import mister3551.msr.game.screen.camera.Camera;
+import mister3551.msr.game.screen.components.Popup;
 import mister3551.msr.game.screen.timer.Timer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen implements Screen {
+
     private final Stage stage;
     private final Skin skin;
     private final World world;
@@ -48,26 +48,38 @@ public class GameScreen implements Screen {
     private final CleanUp cleanUp;
     private final Camera camera;
     private final Timer timer;
+    private final Popup popup;
 
     private Label timerLabel;
+    private Label scoreLabel;
     private Label distanceLabel;
     private Label playerLifelabel;
     private Label ammoLabel;
     private Label enemiesLabel;
 
-    public GameScreen() {
-        this.stage = new Stage(Gdx.app.getType().equals(Application.ApplicationType.Android) ? new ExtendViewport(800, 480) : new ScreenViewport());
-        this.skin = new Skin(Gdx.files.internal("skins/skin/skin.json"));
+    private final String mapName;
+
+    public GameStats gameStats;
+
+    public enum GameStats {
+        IN_PROCESS,
+        PAUSE,
+        COMPLETE,
+        FAILED
+    }
+
+    public GameScreen(String mapName) {
+        this.skin = Static.getSkin();
+        this.stage = Static.getStage();
+
         this.world = new World(new Vector2(0, -25), true);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
 
-        Static.setStage(stage);
-        Static.setSkin(skin);
+        Static.setStatistics(new Statistics());
         Static.setEnemies(new ArrayList<>());
         Static.setEnemiesToRemove(new ArrayList<>());
         Static.setBullets(new ArrayList<>());
         Static.setBulletsToRemove(new ArrayList<>());
-
         Static.setLadders(new ArrayList<>());
         Static.setStopOnLadders(new ArrayList<>());
         Static.setWaters(new ArrayList<>());
@@ -75,7 +87,7 @@ public class GameScreen implements Screen {
         Static.setEnemyMovement(new HashMap<>());
 
         TiledMapHelper tiledMapHelper = new TiledMapHelper(world);
-        this.orthogonalTiledMapRenderer = tiledMapHelper.setupMap();
+        this.orthogonalTiledMapRenderer = tiledMapHelper.setupMap(mapName);
         this.spriteBatch = new SpriteBatch();
         this.player = Static.getPlayer();
         this.enemies = Static.getEnemies();
@@ -84,6 +96,9 @@ public class GameScreen implements Screen {
         this.cleanUp = new CleanUp();
         this.camera = new Camera();
         this.timer = new Timer();
+        this.popup = Static.getPopup();
+        this.gameStats = GameStats.IN_PROCESS;
+        this.mapName = mapName;
     }
 
     @Override
@@ -111,7 +126,7 @@ public class GameScreen implements Screen {
         table1 = new Table();
         table1.setName("enemies");
 
-        enemiesLabel = new Label("10", skin);
+        enemiesLabel = new Label(null, skin);
         table1.add(enemiesLabel);
 
         image = new Image(skin, "enemy");
@@ -122,13 +137,14 @@ public class GameScreen implements Screen {
         table1 = new Table();
         table1.setName("hostages");
 
-        Label label = new Label("15", skin);
+        Label label = new Label(null, skin);
         table1.add(label);
 
         image = new Image(skin, "hostage");
         image.setTouchable(Touchable.disabled);
         table1.add(image).padLeft(5.0f).maxSize(30.0f);
         table.add(table1).padLeft(10.0f);
+
         stage.addActor(table);
 
         table = new Table();
@@ -141,8 +157,8 @@ public class GameScreen implements Screen {
         table.add(timerLabel).padBottom(5.0f);
 
         table.row();
-        label = new Label(null, skin);
-        table.add(label);
+        scoreLabel = new Label(null, skin);
+        table.add(scoreLabel);
         stage.addActor(table);
 
         table = new Table();
@@ -158,13 +174,30 @@ public class GameScreen implements Screen {
         table.add(table1);
 
         table.row();
-
         table1 = new Table();
         table1.padBottom(200.0f);
 
         ammoLabel = new Label(null, skin);
         table1.add(ammoLabel);
         table.add(table1).align(Align.left);
+        stage.addActor(table);
+
+        table = new Table();
+        table.align(Align.topRight);
+        table.setFillParent(true);
+
+        TextButton textButton = new TextButton("Options", skin, "navigation");
+        textButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (popup.isOpen()) {
+                    gameStats = GameStats.PAUSE;
+                    stage.addActor(popup.pausePopup(skin, GameScreen.this));
+                }
+                return true;
+            }
+        });
+        table.add(textButton);
         stage.addActor(table);
 
         player.show();
@@ -202,7 +235,27 @@ public class GameScreen implements Screen {
         //box2DDebugRenderer.render(world, camera.getCamera().combined.scl(Static.PPM));
 
         spriteBatch.end();
-        update(delta);
+
+        if (gameStats == GameStats.IN_PROCESS) {
+            update(delta);
+            timer.resume();
+        }
+
+        if (gameStats == GameStats.PAUSE) {
+            timer.pause();
+        }
+
+        if (gameStats == GameStats.COMPLETE) {
+            if (popup.isOpen()) {
+                stage.addActor(popup.missionCompletePopup(skin, this));
+            }
+        }
+
+        if (gameStats == GameStats.FAILED) {
+            if (popup.isOpen()) {
+                stage.addActor(popup.missionFailedPopup(skin, this));
+            }
+        }
     }
 
     @Override
@@ -211,16 +264,24 @@ public class GameScreen implements Screen {
         camera.update(player);
         stage.getViewport().update(width, height, true);
         player.resize(width, height);
+        popup.resize(width, height);
     }
 
     @Override
     public void pause() {
-
+        if (gameStats == GameStats.IN_PROCESS) {
+            gameStats = GameStats.PAUSE;
+            timer.pause();
+            if (popup.isOpen()) {
+                stage.addActor(popup.pausePopup(skin, this));
+            }
+        }
     }
 
     @Override
     public void resume() {
-
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        popup.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -230,8 +291,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
         skin.dispose();
+        stage.dispose();
+
         player.dispose();
 
         for (Enemy enemy : enemies) {
@@ -254,9 +316,18 @@ public class GameScreen implements Screen {
         ammoLabel.setText("Ammo: " + (player.isReloading() ? "Reloading" : (player.getWeapon().getActiveMagazineCapacity()) + "/" + player.getWeapon().getBackupMagazinesCapacity()));
         enemiesLabel.setText(enemies.size());
 
+        scoreLabel.setText("Score: " + Static.getStatistics().getScore());
+
         camera.update(player);
         timer.update();
         player.update(delta);
+
+        if (Gdx.input.isKeyJustPressed(Static.getOptions().getPause())) {
+            if (popup.isOpen()) {
+                gameStats = GameStats.PAUSE;
+                stage.addActor(popup.pausePopup(skin, GameScreen.this));
+            }
+        }
 
         for (Enemy enemy : enemies) {
             enemy.update(delta);
@@ -267,6 +338,8 @@ public class GameScreen implements Screen {
         for (Bullet bullet : Static.getBullets()) {
             bullet.update();
         }
+
+        checkGameState();
         cleanUp.cleanUpBullets();
         cleanUp.cleanUpCharacters();
     }
@@ -277,5 +350,23 @@ public class GameScreen implements Screen {
 
         float distanceInPixels = new Vector2(Converter.coordinates(endRectangle)).dst(playerPosition);
         return (int) distanceInPixels;
+    }
+
+    private void checkGameState() {
+        if (calculateDistance(player) == 0 && enemies.isEmpty()) {
+            gameStats = GameStats.COMPLETE;
+        }
+
+        if (player.getLive() == 0) {
+            gameStats = GameStats.FAILED;
+        }
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public String getMapName() {
+        return mapName;
     }
 }

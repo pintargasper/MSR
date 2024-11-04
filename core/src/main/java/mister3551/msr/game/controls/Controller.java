@@ -1,5 +1,7 @@
 package mister3551.msr.game.controls;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector2;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import mister3551.msr.game.characters.object.Player;
 import mister3551.msr.game.controls.movement.OnZipline;
 import mister3551.msr.game.controls.movement.Zipline;
+import mister3551.msr.game.database.object.Options;
 
 import java.util.ArrayList;
 
@@ -14,8 +17,8 @@ public class Controller extends Device implements ControllerListener {
 
     private com.badlogic.gdx.controllers.Controller controller;
 
-    public Controller(Body body, Player player) {
-        super(body, player);
+    public Controller(Body body, Player player, Options options) {
+        super(body, player, options);
         Controllers.addListener(this);
     }
 
@@ -71,11 +74,11 @@ public class Controller extends Device implements ControllerListener {
 
         if (controller != null) {
             if (controller.getAxis(0) < -0.8f && !player.isOnLeftSide()) {
-                player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() :  player.getCharacterAnimation().getZiplineLeft());
+                player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() :  player.getCharacterAnimation().getJumpLeft());
                 player.setLastMove("left");
                 player.setVelocityX(-1);
             } else if (controller.getAxis(0) > 0.8f && !player.isOnRightSide()) {
-                player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() :  player.getCharacterAnimation().getZiplineRight());
+                player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() :  player.getCharacterAnimation().getJumpRight());
                 player.setLastMove("right");
                 player.setVelocityX(1);
             } else if (player.isOnFloor()) {
@@ -121,12 +124,11 @@ public class Controller extends Device implements ControllerListener {
                 body.setLinearVelocity(player.getVelocityX() * player.getSpeed(), Math.min(body.getLinearVelocity().y, 25));
             }
 
-            //TODO does not work in html but work in lwjgl3
-            if (controller.getAxis(4) > 0.8f && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
+            if ((Gdx.app.getType() == Application.ApplicationType.Desktop ? controller.getAxis(4) > 0.8f : controller.getButton(6)) && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
                 player.getWeapon().setActiveMagazineCapacity(player.getWeapon().getActiveMagazineCapacity() - player.getOnShoot().shoot(player, delta));
             }
 
-            if (controller.getButton(9) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
+            if ((Gdx.app.getType() == Application.ApplicationType.Desktop ? controller.getButton(9) : controller.getButton(4)) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
                 player.getOnShoot().reload(this, player);
             }
         }

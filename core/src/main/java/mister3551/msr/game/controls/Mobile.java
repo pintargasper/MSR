@@ -16,6 +16,7 @@ import mister3551.msr.game.Static;
 import mister3551.msr.game.characters.object.Player;
 import mister3551.msr.game.controls.movement.OnZipline;
 import mister3551.msr.game.controls.movement.Zipline;
+import mister3551.msr.game.database.object.Options;
 
 import java.util.ArrayList;
 
@@ -31,8 +32,8 @@ public class Mobile extends Device {
     private boolean moveJumpPressed;
     private boolean moveShootPressed;
 
-    public Mobile(Body body, Player player) {
-        super(body, player);
+    public Mobile(Body body, Player player, Options options) {
+        super(body, player, options);
         this.stage = Static.getStage();
         this.skin = Static.getSkin();
         this.shootDrawable = skin.getDrawable("shoot");
@@ -115,11 +116,11 @@ public class Mobile extends Device {
         float touchpadY = touchPad.getKnobPercentY();
 
         if (touchpadX < -0.5f && !player.isOnLeftSide()) {
-            player.setCurrentAnimation(waterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() : player.getCharacterAnimation().getZiplineLeft());
+            player.setCurrentAnimation(waterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() : player.getCharacterAnimation().getJumpLeft());
             player.setLastMove("left");
             player.setVelocityX(-1);
         } else if (touchpadX > 0.5f && !player.isOnRightSide()) {
-            player.setCurrentAnimation(waterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() : player.getCharacterAnimation().getZiplineRight());
+            player.setCurrentAnimation(waterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() : player.getCharacterAnimation().getJumpRight());
             player.setLastMove("right");
             player.setVelocityX(1);
         } else if (player.isOnFloor()) {

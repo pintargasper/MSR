@@ -15,8 +15,8 @@ public abstract class Ammunition {
 
     public Ammunition(Body body) {
         this.body = body;
-        this.width = 20;
-        this.height = 10;
+        this.width = 10;
+        this.height = 5;
     }
 
     public abstract void render(SpriteBatch spriteBatch, float delta);

@@ -1,19 +1,19 @@
 package mister3551.msr.game.controls;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import mister3551.msr.game.characters.object.Player;
 import mister3551.msr.game.controls.movement.OnZipline;
 import mister3551.msr.game.controls.movement.Zipline;
+import mister3551.msr.game.database.object.Options;
 
 import java.util.ArrayList;
 
 public class Computer extends Device {
 
-    public Computer(Body body, Player player) {
-        super(body, player);
+    public Computer(Body body, Player player, Options options) {
+        super(body, player, options);
     }
 
     @Override
@@ -55,12 +55,12 @@ public class Computer extends Device {
         player.setVelocityX(0);
         player.setVelocityY(0);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && !player.isOnLeftSide()) {
-            player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() : player.getCharacterAnimation().getZiplineLeft());
+        if (Gdx.input.isKeyPressed(options.getKeyboardFootLeft()) && !player.isOnLeftSide()) {
+            player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimLeft() : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft() : player.getCharacterAnimation().getJumpLeft());
             player.setLastMove("left");
             player.setVelocityX(-1);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D) && !player.isOnRightSide()) {
-            player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() :  player.getCharacterAnimation().getZiplineRight());
+        } else if (Gdx.input.isKeyPressed(options.getKeyboardFootRight()) && !player.isOnRightSide()) {
+            player.setCurrentAnimation(watterCollision ? player.getCharacterAnimation().getSwimRight() : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight() :  player.getCharacterAnimation().getJumpRight());
             player.setLastMove("right");
             player.setVelocityX(1);
         } else if (player.isOnFloor()) {
@@ -71,10 +71,10 @@ public class Computer extends Device {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && ladderCollision) {
+        if (Gdx.input.isKeyPressed(options.getKeyboardLadderUp()) && ladderCollision) {
             player.setCurrentAnimation(!stopOnLadder ? player.getCharacterAnimation().getClimb() : player.getCharacterAnimation().getStanding());
             player.setVelocityY(player.getSpeedOnLadder());
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S) && ladderCollision) {
+        } else if (Gdx.input.isKeyPressed(options.getKeyboardLadderDown()) && ladderCollision) {
             player.setCurrentAnimation(player.getCharacterAnimation().getClimb());
             player.setVelocityY(-player.getSpeedOnLadder());
         } else if (!stopOnLadder && ladderCollision) {
@@ -93,7 +93,7 @@ public class Computer extends Device {
             player.setCurrentAnimation(!stopOnLadder ? player.getCharacterAnimation().getStandingOnLadder() : player.getLastMove().equals("left") ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W) && player.getJumps() < 1 && player.isOnFloor() && !ladderCollision) {
+        if (Gdx.input.isKeyJustPressed(options.getKeyboardFootJump()) && player.getJumps() < 1 && player.isOnFloor() && !ladderCollision) {
             jump();
             body.setGravityScale(1);
         }
@@ -106,11 +106,11 @@ public class Computer extends Device {
             body.setLinearVelocity(player.getVelocityX() * player.getSpeed(), Math.min(body.getLinearVelocity().y, 25));
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
+        if (Gdx.input.isKeyPressed(options.getKeyboardFootShoot()) && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
             player.getWeapon().setActiveMagazineCapacity(player.getWeapon().getActiveMagazineCapacity() - player.getOnShoot().shoot(player, delta));
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
+        if (Gdx.input.isKeyJustPressed(options.getKeyboardFootReload() | options.getKeyboardLadderReload()) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
             player.getOnShoot().reload(this, player);
         }
     }

@@ -4,10 +4,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Json;
 import mister3551.msr.game.characters.object.Bullet;
 import mister3551.msr.game.characters.object.Enemy;
 import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.database.Data;
+import mister3551.msr.game.database.Token;
+import mister3551.msr.game.database.object.*;
 import mister3551.msr.game.map.BodyHelper;
+import mister3551.msr.game.screen.ScreenChanger;
+import mister3551.msr.game.screen.components.Navigation;
+import mister3551.msr.game.screen.components.Popup;
+import mister3551.msr.game.screen.javascript.Native;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +24,24 @@ public class Static {
 
     public static final int PPM = 32;
 
-    public static Stage stage;
-    public static Skin skin;
+    private static ScreenChanger screenChanger;
+    private static Stage stage;
+    private static Skin skin;
+    private static Native _native;
+    private static Navigation navigation;
+    private static Popup popup;
+    private static Json json;
+    private static Data data;
+    private static Account account;
+    private static Options options;
+    private static Statistics statistics;
+    public static Token token;
+    private static ArrayList<Mission> missions;
+    private static ArrayList<Gear> gears;
 
-    public static Rectangle end;
+    private static Rectangle end;
     private static Player player;
+
     private static ArrayList<Enemy> enemies;
     private static ArrayList<Enemy> enemiesToRemove;
     private static ArrayList<Bullet> bullets;
@@ -32,6 +53,14 @@ public class Static {
     private static HashMap<String, ArrayList<Vector2>> ziplines;
     private static HashMap<String, ArrayList<Vector2>> enemyMovement;
     private static BodyHelper bodyHelper;
+
+    public static ScreenChanger getScreenChanger() {
+        return screenChanger;
+    }
+
+    public static void setScreenChanger(ScreenChanger screenChanger) {
+        Static.screenChanger = screenChanger;
+    }
 
     public static Stage getStage() {
         return stage;
@@ -47,6 +76,94 @@ public class Static {
 
     public static void setSkin(Skin skin) {
         Static.skin = skin;
+    }
+
+    public static Native getNative() {
+        return _native;
+    }
+
+    public static void setNative(Native _native) {
+        Static._native = _native;
+    }
+
+    public static Navigation getNavigation() {
+        return navigation;
+    }
+
+    public static void setNavigation(Navigation navigation) {
+        Static.navigation = navigation;
+    }
+
+    public static Popup getPopup() {
+        return popup;
+    }
+
+    public static void setPopup(Popup popup) {
+        Static.popup = popup;
+    }
+
+    public static Json getJson() {
+        return json;
+    }
+
+    public static void setJson(Json json) {
+        Static.json = json;
+    }
+
+    public static Data getData() {
+        return data;
+    }
+
+    public static void setData(Data data) {
+        Static.data = data;
+    }
+
+    public static Account getAccount() {
+        return account;
+    }
+
+    public static void setAccount(Account account) {
+        Static.account = account;
+    }
+
+    public static Token getToken() {
+        return token;
+    }
+
+    public static void setToken(Token token) {
+        Static.token = token;
+    }
+
+    public static Statistics getStatistics() {
+        return statistics;
+    }
+
+    public static void setStatistics(Statistics statistics) {
+        Static.statistics = statistics;
+    }
+
+    public static Options getOptions() {
+        return options;
+    }
+
+    public static void setOptions(Options options) {
+        Static.options = options;
+    }
+
+    public static ArrayList<Mission> getMissions() {
+        return missions;
+    }
+
+    public static void setMissions(ArrayList<Mission> missions) {
+        Static.missions = missions;
+    }
+
+    public static ArrayList<Gear> getGears() {
+        return gears;
+    }
+
+    public static void setGears(ArrayList<Gear> gears) {
+        Static.gears = gears;
     }
 
     public static Rectangle getEnd() {

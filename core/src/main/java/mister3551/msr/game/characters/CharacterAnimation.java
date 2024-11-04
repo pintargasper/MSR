@@ -15,6 +15,8 @@ public class CharacterAnimation {
     private final Animation<TextureRegion> climb;
     private final Animation<TextureRegion> ziplineLeft;
     private final Animation<TextureRegion> ziplineRight;
+    private final Animation<TextureRegion> jumpLeft;
+    private final Animation<TextureRegion> jumpRight;
     private final Animation<TextureRegion> swimLeft;
     private final Animation<TextureRegion> swimRight;
 
@@ -30,6 +32,8 @@ public class CharacterAnimation {
                               String climb2,
                               String flyLeft,
                               String flyRight,
+                              String jumpLeft,
+                              String jumpRight,
                               String swimLeft1,
                               String swimLeft2,
                               String swimRight1,
@@ -44,6 +48,8 @@ public class CharacterAnimation {
         this.climb = new Animation<>(0.3f, textureAtlas.findRegion(climb1), textureAtlas.findRegion(climb2));
         this.ziplineLeft = new Animation<>(0, textureAtlas.findRegion(flyLeft));
         this.ziplineRight = new Animation<>(0, textureAtlas.findRegion(flyRight));
+        this.jumpLeft = new Animation<>(0, textureAtlas.findRegion(jumpLeft));
+        this.jumpRight = new Animation<>(0, textureAtlas.findRegion(jumpRight));
         this.swimLeft = new Animation<>(0.3f, textureAtlas.findRegion(swimLeft1), textureAtlas.findRegion(swimLeft2));
         this.swimRight = new Animation<>(0.3f, textureAtlas.findRegion(swimRight1), textureAtlas.findRegion(swimRight2));
     }
@@ -82,6 +88,14 @@ public class CharacterAnimation {
 
     public Animation<TextureRegion> getZiplineRight() {
         return ziplineRight;
+    }
+
+    public Animation<TextureRegion> getJumpLeft() {
+        return jumpLeft;
+    }
+
+    public Animation<TextureRegion> getJumpRight() {
+        return jumpRight;
     }
 
     public Animation<TextureRegion> getSwimLeft() {

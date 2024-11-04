@@ -27,7 +27,9 @@ public class OnShoot {
             if (character.getCurrentAnimation() == character.getCharacterAnimation().getStandLeft()
                 || character.getCurrentAnimation() == character.getCharacterAnimation().getStandRight()
                 || character.getCurrentAnimation() == character.getCharacterAnimation().getWalkLeft()
-                || character.getCurrentAnimation() == character.getCharacterAnimation().getWalkRight()) {
+                || character.getCurrentAnimation() == character.getCharacterAnimation().getWalkRight()
+                || character.getCurrentAnimation() == character.getCharacterAnimation().getJumpLeft()
+                || character.getCurrentAnimation() == character.getCharacterAnimation().getJumpRight()) {
 
                 float accuracyFactor = 1.0f - (character.getWeapon().getAccuracy() / 100.0f);
                 float variance = MathUtils.random(-character.getSpeed() * accuracyFactor, character.getSpeed() * accuracyFactor);
@@ -40,6 +42,10 @@ public class OnShoot {
                 Body body = Static.getBodyHelper().body("Bullet", 5, 5, x, (character.getY() - 5) + variance, false);
                 body.setUserData("bullet");
                 Static.getBullets().add(new Bullet(body, character.getLastMove(), character.getWeapon()));
+
+                if (character instanceof Player) {
+                    Static.getStatistics().setAmmoCosts(Static.getStatistics().getAmmoCosts() + 12);
+                }
                 return 1;
             }
         }

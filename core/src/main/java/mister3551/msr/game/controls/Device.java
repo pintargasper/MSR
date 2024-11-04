@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import mister3551.msr.game.characters.object.Player;
 import mister3551.msr.game.controls.movement.Zipline;
+import mister3551.msr.game.database.object.Options;
 
 import java.util.ArrayList;
 
@@ -11,12 +12,14 @@ public abstract class Device {
 
     protected final Body body;
     protected final Player player;
+    protected final Options options;
     protected Zipline zipline;
     protected boolean isShooting;
 
-    public Device(Body body, Player player) {
+    public Device(Body body, Player player, Options options) {
         this.body = body;
         this.player = player;
+        this.options = options;
         this.isShooting = true;
     }
 
