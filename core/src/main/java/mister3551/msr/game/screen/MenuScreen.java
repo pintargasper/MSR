@@ -75,7 +75,6 @@ public class MenuScreen implements Screen {
                         Gdx.app.postRunnable(() -> {
                             if (!popup.isOpen()) {
                                 popup.close();
-                                popup.setOpen(false);
                             }
 
                             if (popup.isOpen()) {
@@ -84,7 +83,6 @@ public class MenuScreen implements Screen {
                         });
                     }
                 });
-
                 return true;
             }
         });

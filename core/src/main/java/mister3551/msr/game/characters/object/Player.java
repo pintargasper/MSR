@@ -21,7 +21,6 @@ public class Player extends Character {
     private final Computer computer;
     private final Mobile mobile;
     private final Controller controller;
-    private float elapsedTime = 0;
     private boolean reloading = false;
 
     public Player(Body body, Rectangle rectangle, Weapon weapon, ObjectData objectData) {

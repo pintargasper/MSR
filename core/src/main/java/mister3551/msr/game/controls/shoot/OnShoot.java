@@ -44,7 +44,8 @@ public class OnShoot {
                 Static.getBullets().add(new Bullet(body, character.getLastMove(), character.getWeapon()));
 
                 if (character instanceof Player) {
-                    Static.getStatistics().setAmmoCosts(Static.getStatistics().getAmmoCosts() + 12);
+                    Static.getStatistics().setShotsFired(Static.getStatistics().getShotsFired() + 1);
+                    Static.getStatistics().getMoney().put("ammoCosts", Static.getStatistics().getMoney().getOrDefault("ammoCosts", 0.0f) + 3.0f);
                 }
                 return 1;
             }

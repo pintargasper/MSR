@@ -5,9 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
-import mister3551.msr.game.characters.object.Bullet;
-import mister3551.msr.game.characters.object.Enemy;
-import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.characters.object.*;
 import mister3551.msr.game.database.Data;
 import mister3551.msr.game.database.Token;
 import mister3551.msr.game.database.object.*;
@@ -44,15 +42,22 @@ public class Static {
 
     private static ArrayList<Enemy> enemies;
     private static ArrayList<Enemy> enemiesToRemove;
+    private static ArrayList<Hostage> hostages;
+    private static ArrayList<Hostage> hostagesToRemove;
     private static ArrayList<Bullet> bullets;
     private static ArrayList<Bullet> bulletsToRemove;
 
     private static ArrayList<Rectangle> ladders;
     private static ArrayList<Rectangle> stopOnLadders;
     private static ArrayList<Rectangle> waters;
+    private static ArrayList<Item> items;
+    private static ArrayList<Item> itemsToRemove;
     private static HashMap<String, ArrayList<Vector2>> ziplines;
     private static HashMap<String, ArrayList<Vector2>> enemyMovement;
     private static BodyHelper bodyHelper;
+
+    private static int totalEnemies;
+    private static int totalHostages;
 
     public static ScreenChanger getScreenChanger() {
         return screenChanger;
@@ -198,6 +203,22 @@ public class Static {
         Static.enemiesToRemove = enemiesToRemove;
     }
 
+    public static ArrayList<Hostage> getHostages() {
+        return hostages;
+    }
+
+    public static void setHostages(ArrayList<Hostage> hostages) {
+        Static.hostages = hostages;
+    }
+
+    public static ArrayList<Hostage> getHostagesToRemove() {
+        return hostagesToRemove;
+    }
+
+    public static void setHostagesToRemove(ArrayList<Hostage> hostagesToRemove) {
+        Static.hostagesToRemove = hostagesToRemove;
+    }
+
     public static ArrayList<Bullet> getBullets() {
         return bullets;
     }
@@ -238,6 +259,22 @@ public class Static {
         Static.waters = waters;
     }
 
+    public static ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public static void setItems(ArrayList<Item> items) {
+        Static.items = items;
+    }
+
+    public static ArrayList<Item> getItemsToRemove() {
+        return itemsToRemove;
+    }
+
+    public static void setItemsToRemove(ArrayList<Item> itemsToRemove) {
+        Static.itemsToRemove = itemsToRemove;
+    }
+
     public static HashMap<String, ArrayList<Vector2>> getZiplines() {
         return ziplines;
     }
@@ -260,5 +297,21 @@ public class Static {
 
     public static void setBodyHelper(BodyHelper bodyHelper) {
         Static.bodyHelper = bodyHelper;
+    }
+
+    public static int getTotalEnemies() {
+        return totalEnemies;
+    }
+
+    public static void setTotalEnemies(int totalEnemies) {
+        Static.totalEnemies = totalEnemies;
+    }
+
+    public static int getTotalHostages() {
+        return totalHostages;
+    }
+
+    public static void setTotalHostages(int totalHostages) {
+        Static.totalHostages = totalHostages;
     }
 }

@@ -17,6 +17,11 @@ public class Timer {
         this.time = "0s";
     }
 
+    @Override
+    public String toString() {
+        return time;
+    }
+
     public void update() {
         if (!paused) {
             long currentTime = TimeUtils.nanoTime();
@@ -57,8 +62,19 @@ public class Timer {
         }
     }
 
-    @Override
-    public String toString() {
-        return time;
+    public String string() {
+        long currentTime = TimeUtils.nanoTime();
+        long elapsedTime = currentTime - startTime - totalPausedTime;
+
+        long seconds = elapsedTime / 1_000_000_000L;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+
+        seconds %= 60;
+        minutes %= 60;
+
+        return (hours < 10 ? "0" + hours : hours) + ":" +
+            (minutes < 10 ? "0" + minutes : minutes) + ":" +
+            (seconds < 10 ? "0" + seconds : seconds);
     }
 }

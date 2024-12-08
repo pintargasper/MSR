@@ -18,6 +18,8 @@ import mister3551.msr.game.database.object.Options;
 import mister3551.msr.game.screen.GameScreen;
 import mister3551.msr.game.screen.link.Callback;
 
+import java.util.ArrayList;
+
 public class Popup {
 
     private Table table;
@@ -262,7 +264,7 @@ public class Popup {
                         Static.setOptions((Options) object);
                         Gdx.app.postRunnable(() -> {
                             setOpen(false);
-                            Static.getScreenChanger().changeScreen("GameScreen", mission.getMap());
+                            Static.getScreenChanger().changeScreen("GameScreen", mission);
                         });
                     }
 
@@ -421,7 +423,7 @@ public class Popup {
         label = new Label("Earned money:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("earned", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -432,7 +434,7 @@ public class Popup {
         label = new Label("Hostage killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("hostageKilled", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -443,7 +445,7 @@ public class Popup {
         label = new Label("Enemy killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("enemyKilled", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -454,7 +456,7 @@ public class Popup {
         label = new Label("Ammo costs:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label(Static.getStatistics().getAmmoCosts() + "€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("ammoCosts", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -476,7 +478,7 @@ public class Popup {
         label = new Label("Total Earned money:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("total", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).padTop(5.0f).minWidth(200.0f).maxWidth(200.0f);
@@ -498,8 +500,32 @@ public class Popup {
         textButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                close();
-                Static.getScreenChanger().changeScreen("MissionScreen");
+                if (Static.getPopup().isOpen()) {
+                    Static.getStage().addActor(Static.getPopup().loadingPopup(skin));
+                }
+                Static.getData().missions(new Callback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        Static.setMissions((ArrayList<Mission>) object);
+                        Gdx.app.postRunnable(() -> {
+                            Static.getPopup().close();
+                            Static.getScreenChanger().changeScreen("MissionScreen");
+                        });
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Gdx.app.postRunnable(() -> {
+                            if (!Static.getPopup().isOpen()) {
+                                Static.getPopup().close();
+                            }
+
+                            if (Static.getPopup().isOpen()) {
+                                Static.getStage().addActor(Static.getPopup().errorPopup(skin, errorMessage));
+                            }
+                        });
+                    }
+                });
                 return true;
             }
         });
@@ -552,7 +578,7 @@ public class Popup {
         label = new Label("Earned money:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("earned", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -574,7 +600,7 @@ public class Popup {
         label = new Label("Enemy killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0/10", skin);
+        label = new Label((Static.getTotalEnemies() - Static.getEnemies().size()) + "/" + Static.getTotalEnemies(), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -585,7 +611,7 @@ public class Popup {
         label = new Label("Ammo costs:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label(Static.getStatistics().getAmmoCosts() + "€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("ammoCosts", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -607,7 +633,7 @@ public class Popup {
         label = new Label("Total Earned money:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label("0€", skin);
+        label = new Label(Static.getStatistics().getMoney().getOrDefault("total", 0.0f) + "€", skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).padTop(5.0f).minWidth(200.0f).maxWidth(200.0f);
@@ -620,7 +646,7 @@ public class Popup {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 close();
-                Static.getScreenChanger().changeScreen("GameScreen", gameScreen.getMapName());
+                Static.getScreenChanger().changeScreen("GameScreen", gameScreen.getMission());
                 return true;
             }
         });
@@ -630,8 +656,32 @@ public class Popup {
         textButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                close();
-                Static.getScreenChanger().changeScreen("MissionScreen");
+                if (Static.getPopup().isOpen()) {
+                    Static.getStage().addActor(Static.getPopup().loadingPopup(skin));
+                }
+                Static.getData().missions(new Callback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        Static.setMissions((ArrayList<Mission>) object);
+                        Gdx.app.postRunnable(() -> {
+                            Static.getPopup().close();
+                            Static.getScreenChanger().changeScreen("MissionScreen");
+                        });
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Gdx.app.postRunnable(() -> {
+                            if (!Static.getPopup().isOpen()) {
+                                Static.getPopup().close();
+                            }
+
+                            if (Static.getPopup().isOpen()) {
+                                Static.getStage().addActor(Static.getPopup().errorPopup(skin, errorMessage));
+                            }
+                        });
+                    }
+                });
                 return true;
             }
         });

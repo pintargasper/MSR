@@ -45,6 +45,10 @@ public class Mission implements Json.Serializable {
         this.map = jsonData.getString("map");
     }
 
+    public Long getId() {
+        return (long) id;
+    }
+
     public String getIdUser() {
         return idUser;
     }

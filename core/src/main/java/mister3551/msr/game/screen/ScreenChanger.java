@@ -3,6 +3,7 @@ package mister3551.msr.game.screen;
 import mister3551.msr.game.Main;
 import mister3551.msr.game.Static;
 import com.badlogic.gdx.Screen;
+import mister3551.msr.game.database.object.Mission;
 
 public class ScreenChanger {
 
@@ -12,7 +13,7 @@ public class ScreenChanger {
         this.main = main;
     }
 
-    public void changeScreen(String screenName, String... mapName) {
+    public void changeScreen(String screenName, Mission... missions) {
         Screen newScreen = null;
 
         switch (screenName) {
@@ -26,7 +27,7 @@ public class ScreenChanger {
                 newScreen = new MissionScreen();
                 break;
             case "GameScreen":
-                newScreen = new GameScreen(mapName[0]);
+                newScreen = new GameScreen(missions[0]);
                 break;
             case "OptionsScreen":
                 newScreen = new OptionsScreen();

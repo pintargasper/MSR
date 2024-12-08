@@ -9,10 +9,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import mister3551.msr.game.Static;
-import mister3551.msr.game.database.object.Account;
-import mister3551.msr.game.database.object.Gear;
-import mister3551.msr.game.database.object.Options;
-import mister3551.msr.game.database.object.Mission;
+import mister3551.msr.game.database.object.*;
 import mister3551.msr.game.screen.link.Callback;
 
 import java.util.ArrayList;
@@ -271,6 +268,41 @@ public class Data {
             .header("Authorization", "Bearer " + Static.getAccount().getToken())
             .header("Content-Type", "application/json")
             .content(json.toJson(gear))
+            .build();
+
+        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                HttpStatus status = httpResponse.getStatus();
+                String responseContent = httpResponse.getResultAsString();
+                if (status.getStatusCode() == 200) {
+                    callback.onSuccess(responseContent);
+                } else {
+                    callback.onError("No internet connection or connection error");
+                }
+            }
+
+            @Override
+            public void failed(Throwable throwable) {
+                callback.onError("No internet connection or connection error");
+            }
+
+            @Override
+            public void cancelled() {
+                callback.onError("Cancelled");
+            }
+        });
+    }
+
+    public void insertMission(Statistics statistics, Callback callback) {
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+        Net.HttpRequest request = requestBuilder
+            .newRequest()
+            .method(Net.HttpMethods.POST)
+            .url(API + "/app/user/mission/update")
+            .header("Authorization", "Bearer " + Static.getAccount().getToken())
+            .header("Content-Type", "application/json")
+            .content(json.toJson(statistics))
             .build();
 
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {

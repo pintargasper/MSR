@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 public class Enemy extends Character {
 
     private final MovementAI movementAI;
-    private final String name;
-    private float elapsedTime = 0;
     private boolean playerDetected = false;
 
-    public Enemy(Body body, Rectangle rectangle, Weapon weapon, ObjectData objectData, String name) {
+    public Enemy(Body body, Rectangle rectangle, Weapon weapon, ObjectData objectData, String name, String type, String group) {
         super(body, rectangle, weapon, objectData.getWidth(), objectData.getHeight());
         this.movementAI = new MovementAI();
         this.name = name;
+        this.type = type;
+        this.group = group;
         this.speed = 5;
         this.speedOnLadder = 5;
         this.speedOnZipline = 15;
@@ -110,10 +110,6 @@ public class Enemy extends Character {
 
     private boolean waterCollision() {
         return Static.getWaters().stream().anyMatch(rectangle -> this.rectangle.overlaps(rectangle));
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean isPlayerDetected() {

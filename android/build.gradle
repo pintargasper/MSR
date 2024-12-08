@@ -28,7 +28,7 @@ android {
     minSdkVersion 19
     targetSdkVersion 34
     versionCode 1
-    versionName "1.0.40"
+    versionName "1.0.47-beta"
     multiDexEnabled true
   }
   compileOptions {

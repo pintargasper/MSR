@@ -14,9 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import mister3551.msr.game.Static;
-import mister3551.msr.game.characters.object.Enemy;
-import mister3551.msr.game.characters.object.Player;
-import mister3551.msr.game.characters.object.Weapon;
+import mister3551.msr.game.characters.object.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,6 +38,7 @@ public class TiledMapHelper {
         MapObjects ladders = components.getLayers().get("Ladder").getObjects();
         MapObjects ziplines = components.getLayers().get("Zipline").getObjects();
         MapObjects water = components.getLayers().get("Water").getObjects();
+        MapObjects items = components.getLayers().get("Items").getObjects();
         MapObjects enemyMovement = components.getLayers().get("EnemyMovement").getObjects();
 
         parseMapObject(mapObjects);
@@ -47,6 +46,7 @@ public class TiledMapHelper {
         parseLadders(ladders);
         parseZipline(ziplines);
         parseWater(water);
+        parseItems(items);
         parseEnemyMovement(enemyMovement);
         return new OrthogonalTiledMapRenderer(tiledMap);
     }
@@ -67,9 +67,8 @@ public class TiledMapHelper {
     private void parseCharacters(MapObjects mapObjects) {
         for (MapObject mapObject : mapObjects) {
             if (mapObject instanceof TiledMapTileMapObject) {
+                ObjectData objectData = objectData(mapObject);
                 if (mapObject.getName() != null && mapObject.getName().equals("Player")) {
-                    ObjectData objectData = objectData(mapObject);
-
                     Weapon weapon = new Weapon("RPK-74", 36, 43, 50, 650, 45);
 
                     Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
@@ -77,17 +76,21 @@ public class TiledMapHelper {
                     Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
                     Static.setPlayer(new Player(body, rectangle, weapon, objectData));
                 } else if (mapObject.getName() != null && mapObject.getName().startsWith("Enemy")) {
-                    ObjectData objectData = objectData(mapObject);
-
                     Weapon weapon = new Weapon("RPK-74", 36, 43, 50, 650, 45);
 
                     Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
                     body.setUserData(mapObject.getName());
                     Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
-                    Static.getEnemies().add(new Enemy(body, rectangle, weapon, objectData, mapObject.getName()));
+                    Static.getEnemies().add(new Enemy(body, rectangle, weapon, objectData, mapObject.getName(), mapObject.getProperties().get("type", String.class), mapObject.getProperties().get("group", String.class)));
+                } else if (mapObject.getName() != null && mapObject.getName().startsWith("Hostage")) {
+                    Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
+                    body.setUserData(mapObject.getName());
+                    Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
+                    Static.getHostages().add(new Hostage(body, rectangle, objectData, mapObject.getName(), mapObject.getProperties().get("type", String.class), mapObject.getProperties().get("group", String.class)));
                 }
             }
         }
+        Static.setTotalEnemies(Static.getEnemies().size());
     }
 
     private void parseLadders(MapObjects mapObjects) {
@@ -143,6 +146,19 @@ public class TiledMapHelper {
             if (mapObject.getName() != null && mapObject.getName().equals("Water")) {
                 Rectangle rectangle = ((RectangleMapObject) mapObject).getRectangle();
                 Static.getWaters().add(rectangle);
+            }
+        }
+    }
+
+    private void parseItems(MapObjects mapObjects) {
+        for (MapObject mapObject : mapObjects) {
+            if (mapObject.getName() != null) {
+                ObjectData objectData = objectData(mapObject);
+
+                Body body = bodyHelper.body(mapObject.getName(), objectData.getWidth(), objectData.getHeight(), objectData.getPositionX(), objectData.getPositionY(), false);
+                body.setUserData(mapObject.getProperties().get("group", String.class));
+                Rectangle rectangle = new Rectangle(objectData.getPositionX(), objectData.getPositionY(), objectData.getWidth(), objectData.getHeight());
+                Static.getItems().add(new Item(mapObject.getName().toLowerCase(), body, rectangle, objectData.getWidth(), objectData.getHeight()));
             }
         }
     }

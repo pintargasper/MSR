@@ -18,6 +18,9 @@ public abstract class Character {
     protected CharacterAnimation characterAnimation;
     protected Animation<TextureRegion> currentAnimation;
     protected final OnShoot onShoot;
+    protected String name;
+    protected String type;
+    protected String group;
     protected float width;
     protected float height;
     protected float x;
@@ -29,6 +32,7 @@ public abstract class Character {
     protected float speed;
     protected float speedOnLadder;
     protected float speedOnZipline;
+    protected float elapsedTime;
     protected int jumps;
     protected int shots;
     protected boolean bodyOnFloor;
@@ -53,6 +57,7 @@ public abstract class Character {
         this.speed = 0;
         this.speedOnLadder = 0;
         this.speedOnZipline = 0;
+        this.elapsedTime = 0;
         this.jumps = 0;
         this.shots = 0;
         this.bodyOnFloor = false;
@@ -88,6 +93,18 @@ public abstract class Character {
 
     public OnShoot getOnShoot() {
         return onShoot;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getGroup() {
+        return group;
     }
 
     public float getWidth() {

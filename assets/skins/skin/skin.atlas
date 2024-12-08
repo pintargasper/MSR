@@ -63,7 +63,7 @@ check-box-of
   index: -1
 check-box-on
   rotate: false
-  xy: 1026, 1169
+  xy: 493, 409
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -175,7 +175,7 @@ touchpad-background
   index: -1
 touchpad-knob
   rotate: false
-  xy: 493, 399
+  xy: 1026, 1231
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
@@ -350,8 +350,8 @@ heart
   index: -1
 hostage
   rotate: false
-  xy: 1026, 1221
-  size: 66, 70
-  orig: 66, 70
+  xy: 281, 1
+  size: 66, 69
+  orig: 66, 69
   offset: 0, 0
   index: -1

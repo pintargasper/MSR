@@ -2,9 +2,7 @@ package mister3551.msr.game.characters;
 
 import com.badlogic.gdx.physics.box2d.*;
 import mister3551.msr.game.Static;
-import mister3551.msr.game.characters.object.Bullet;
-import mister3551.msr.game.characters.object.Enemy;
-import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.characters.object.*;
 
 import java.util.Objects;
 
@@ -71,6 +69,8 @@ public class Collision {
                     for (Bullet bullet : Static.getBullets()) {
                         if (bullet.getBody() == fixtureA.getBody() || bullet.getBody() == fixtureB.getBody()) {
                             Static.getBulletsToRemove().add(bullet);
+                            //TODO fix just for player
+                            Static.getStatistics().setMissedShots(Static.getStatistics().getMissedShots() + 1);
                         }
                     }
                 }
@@ -86,7 +86,31 @@ public class Collision {
                                             enemy.setLive(enemy.getLive() - bullet.getDamage());
                                         } else {
                                             Static.getEnemiesToRemove().add(enemy);
-                                            Static.getStatistics().setScore(Static.getStatistics().getScore() + 100);
+                                            Static.getStatistics().setScore(Static.getStatistics().getScore() + bullet.getDamage());
+
+                                            String enemyType = enemy.getType().replaceAll("\\d+$", "").toLowerCase();
+                                            Static.getStatistics().getEnemyTypesKilled().put(enemyType, Static.getStatistics().getEnemyTypesKilled().getOrDefault(enemyType, 0) + 1);
+                                        }
+                                    }
+                                }
+                                Static.getBulletsToRemove().add(bullet);
+                            }
+                        }
+                    }
+
+                    if (fixture.startsWith("bullet-Hostage") || fixture.matches("Hostage\\d*-bullet")) {
+                        for (Bullet bullet : Static.getBullets()) {
+                            if (bullet.getBody() == fixtureA.getBody() || bullet.getBody() == fixtureB.getBody()) {
+                                for (Hostage hostage : Static.getHostages()) {
+                                    if (hostage.getBody() == fixtureA.getBody() || hostage.getBody() == fixtureB.getBody()) {
+                                        if (hostage.getLive() - bullet.getDamage() > 0) {
+                                            hostage.setLive(hostage.getLive() - bullet.getDamage());
+                                        } else {
+                                            Static.getHostagesToRemove().add(hostage);
+                                            //Static.getStatistics().setScore(Static.getStatistics().getScore() + bullet.getDamage());
+
+                                            String hostageType = hostage.getType().replaceAll("\\d+$", "").toLowerCase();
+                                            Static.getStatistics().getHostageTypesKilled().put(hostageType, Static.getStatistics().getEnemyTypesKilled().getOrDefault(hostageType, 0) + 1);
                                         }
                                     }
                                 }
@@ -108,6 +132,25 @@ public class Collision {
                         for (Bullet bullet : Static.getBullets()) {
                             if (bullet.getBody() == fixtureA.getBody() || bullet.getBody() == fixtureB.getBody()) {
                                 Static.getBulletsToRemove().add(bullet);
+                            }
+                        }
+                    }
+
+                    if (fixture.startsWith("Player-Hostage") || fixture.matches("Hostage\\d*-Player")) {
+                        for (Hostage hostage : Static.getHostages()) {
+                            if (hostage.getBody() == fixtureA.getBody() || hostage.getBody() == fixtureB.getBody()) {
+                                String hostageGroup = hostage.getGroup().replaceAll("\\d+$", "").toLowerCase();
+                                Static.getStatistics().getItemsCollected().put(hostageGroup, Static.getStatistics().getItemsCollected().getOrDefault(hostageGroup, 0) + 1);
+                                Static.getHostagesToRemove().add(hostage);
+                            }
+                        }
+                    }
+
+                    if (fixture.startsWith("Player-Item") || fixture.matches("Item-Player")) {
+                        for (Item item : Static.getItems()) {
+                            if (item.getBody() == fixtureA.getBody() || item.getBody() == fixtureB.getBody()) {
+                                Static.getStatistics().getItemsCollected().put(item.getName(), Static.getStatistics().getItemsCollected().getOrDefault(item.getName(), 0) + 1);
+                                Static.getItemsToRemove().add(item);
                             }
                         }
                     }

@@ -19,15 +19,15 @@ import com.badlogic.gdx.utils.Align;
 import mister3551.msr.game.Static;
 import mister3551.msr.game.characters.Collision;
 import mister3551.msr.game.characters.DetectionSystem;
-import mister3551.msr.game.characters.object.Bullet;
-import mister3551.msr.game.characters.object.Enemy;
-import mister3551.msr.game.characters.object.Player;
+import mister3551.msr.game.characters.object.*;
+import mister3551.msr.game.database.object.Mission;
 import mister3551.msr.game.database.object.Statistics;
 import mister3551.msr.game.map.CleanUp;
 import mister3551.msr.game.map.Converter;
 import mister3551.msr.game.map.TiledMapHelper;
 import mister3551.msr.game.screen.camera.Camera;
 import mister3551.msr.game.screen.components.Popup;
+import mister3551.msr.game.screen.link.Callback;
 import mister3551.msr.game.screen.timer.Timer;
 
 import java.util.ArrayList;
@@ -43,12 +43,14 @@ public class GameScreen implements Screen {
     private final SpriteBatch spriteBatch;
     private final Player player;
     private final ArrayList<Enemy> enemies;
+    private final ArrayList<Hostage> hostages;
     private final Collision collision;
     private final DetectionSystem detectionSystem;
     private final CleanUp cleanUp;
     private final Camera camera;
     private final Timer timer;
     private final Popup popup;
+    private final Mission mission;
 
     private Label timerLabel;
     private Label scoreLabel;
@@ -56,8 +58,7 @@ public class GameScreen implements Screen {
     private Label playerLifelabel;
     private Label ammoLabel;
     private Label enemiesLabel;
-
-    private final String mapName;
+    private Label hostagesLabel;
 
     public GameStats gameStats;
 
@@ -65,32 +66,37 @@ public class GameScreen implements Screen {
         IN_PROCESS,
         PAUSE,
         COMPLETE,
-        FAILED
+        FAILED,
+        END
     }
 
-    public GameScreen(String mapName) {
+    public GameScreen(Mission mission) {
         this.skin = Static.getSkin();
         this.stage = Static.getStage();
-
         this.world = new World(new Vector2(0, -25), true);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
 
         Static.setStatistics(new Statistics());
         Static.setEnemies(new ArrayList<>());
         Static.setEnemiesToRemove(new ArrayList<>());
+        Static.setHostages(new ArrayList<>());
+        Static.setHostagesToRemove(new ArrayList<>());
         Static.setBullets(new ArrayList<>());
         Static.setBulletsToRemove(new ArrayList<>());
         Static.setLadders(new ArrayList<>());
         Static.setStopOnLadders(new ArrayList<>());
         Static.setWaters(new ArrayList<>());
+        Static.setItems(new ArrayList<>());
+        Static.setItemsToRemove(new ArrayList<>());
         Static.setZiplines(new HashMap<>());
         Static.setEnemyMovement(new HashMap<>());
 
         TiledMapHelper tiledMapHelper = new TiledMapHelper(world);
-        this.orthogonalTiledMapRenderer = tiledMapHelper.setupMap(mapName);
+        this.orthogonalTiledMapRenderer = tiledMapHelper.setupMap(mission.getMap());
         this.spriteBatch = new SpriteBatch();
         this.player = Static.getPlayer();
         this.enemies = Static.getEnemies();
+        this.hostages = Static.getHostages();
         this.collision = new Collision(world, player);
         this.detectionSystem = new DetectionSystem(world);
         this.cleanUp = new CleanUp();
@@ -98,7 +104,9 @@ public class GameScreen implements Screen {
         this.timer = new Timer();
         this.popup = Static.getPopup();
         this.gameStats = GameStats.IN_PROCESS;
-        this.mapName = mapName;
+        this.mission = mission;
+
+        Static.getStatistics().initialize();
     }
 
     @Override
@@ -106,14 +114,12 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
-        table.setName("left");
         table.padLeft(30.0f);
         table.padTop(10.0f);
         table.align(Align.topLeft);
         table.setFillParent(true);
 
         Table table1 = new Table();
-        table1.setName("life");
 
         playerLifelabel = new Label(null, skin);
         table1.add(playerLifelabel);
@@ -124,7 +130,6 @@ public class GameScreen implements Screen {
         table.add(table1).padLeft(5.0f);
 
         table1 = new Table();
-        table1.setName("enemies");
 
         enemiesLabel = new Label(null, skin);
         table1.add(enemiesLabel);
@@ -135,10 +140,9 @@ public class GameScreen implements Screen {
         table.add(table1).padLeft(10.0f);
 
         table1 = new Table();
-        table1.setName("hostages");
 
-        Label label = new Label(null, skin);
-        table1.add(label);
+        hostagesLabel = new Label(null, skin);
+        table1.add(hostagesLabel);
 
         image = new Image(skin, "hostage");
         image.setTouchable(Touchable.disabled);
@@ -148,7 +152,6 @@ public class GameScreen implements Screen {
         stage.addActor(table);
 
         table = new Table();
-        table.setName("center");
         table.padTop(15.0f);
         table.align(Align.top);
         table.setFillParent(true);
@@ -221,20 +224,45 @@ public class GameScreen implements Screen {
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         spriteBatch.begin();
 
+        for (Item item : Static.getItems()) {
+            if (camera.isVisible(item.getBody().getPosition())) {
+                item.render(spriteBatch, delta);
+            }
+        }
+
         for (Enemy enemy : enemies) {
             if (camera.isVisible(enemy.getBody().getPosition())) {
                 enemy.render(spriteBatch, delta);
             }
         }
 
-        for (Bullet bullet : Static.getBullets()) {
-            bullet.render(spriteBatch, delta);
+        for (Hostage hostage : hostages) {
+            if (camera.isVisible(hostage.getBody().getPosition())) {
+                hostage.render(spriteBatch, delta);
+            }
         }
+
+        for (Bullet bullet : Static.getBullets()) {
+            if (camera.isVisible(bullet.getBody().getPosition())) {
+                bullet.render(spriteBatch, delta);
+            }
+        }
+
         player.render(spriteBatch, delta);
 
         //box2DDebugRenderer.render(world, camera.getCamera().combined.scl(Static.PPM));
 
         spriteBatch.end();
+
+        if (Gdx.input.isKeyJustPressed(Static.getOptions().getPause())) {
+            if (popup.isOpen()) {
+                gameStats = GameStats.PAUSE;
+                stage.addActor(popup.pausePopup(skin, GameScreen.this));
+            } else if (!popup.isOpen()) {
+                gameStats = GameStats.IN_PROCESS;
+                popup.close();
+            }
+        }
 
         if (gameStats == GameStats.IN_PROCESS) {
             update(delta);
@@ -246,14 +274,79 @@ public class GameScreen implements Screen {
         }
 
         if (gameStats == GameStats.COMPLETE) {
+            gameStats = GameStats.END;
+            distanceLabel.setText("Distance: 0.00 m");
+            Static.getStatistics().setIdMission(mission.getId());
+            Static.getStatistics().setIdUser(Long.parseLong(mission.getIdUser()));
+            Static.getStatistics().setWin(true);
+            Static.getStatistics().setAccuracy();
+            Static.getStatistics().setUsedTime(getTimer().string());
+
             if (popup.isOpen()) {
-                stage.addActor(popup.missionCompletePopup(skin, this));
+                Static.getStage().addActor(popup.loadingPopup(skin));
             }
+            Static.getData().insertMission(Static.getStatistics(), new Callback() {
+                @Override
+                public void onSuccess(Object object) {
+                    Gdx.app.postRunnable(() -> {
+                        popup.close();
+                        if (popup.isOpen()) {
+                            stage.addActor(popup.missionCompletePopup(skin, GameScreen.this));
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    Gdx.app.postRunnable(() -> {
+                        if (popup.isOpen()) {
+                            popup.close();
+                        }
+
+                        if (popup.isOpen()) {
+                            Static.getStage().addActor(popup.errorPopup(skin, errorMessage));
+                        }
+                    });
+                }
+            });
         }
 
         if (gameStats == GameStats.FAILED) {
+            gameStats = GameStats.END;
             if (popup.isOpen()) {
-                stage.addActor(popup.missionFailedPopup(skin, this));
+                Static.getStatistics().setIdMission(mission.getId());
+                Static.getStatistics().setIdUser(Long.parseLong(mission.getIdUser()));
+                Static.getStatistics().setWin(false);
+                Static.getStatistics().setAccuracy();
+                Static.getStatistics().setUsedTime(getTimer().string());
+
+                if (popup.isOpen()) {
+                    Static.getStage().addActor(popup.loadingPopup(skin));
+                }
+                Static.getData().insertMission(Static.getStatistics(), new Callback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        Gdx.app.postRunnable(() -> {
+                            popup.close();
+                            if (popup.isOpen()) {
+                                stage.addActor(popup.missionFailedPopup(skin, GameScreen.this));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Gdx.app.postRunnable(() -> {
+                            if (popup.isOpen()) {
+                                popup.close();
+                            }
+
+                            if (popup.isOpen()) {
+                                Static.getStage().addActor(popup.errorPopup(skin, errorMessage));
+                            }
+                        });
+                    }
+                });
             }
         }
     }
@@ -300,6 +393,10 @@ public class GameScreen implements Screen {
             enemy.dispose();
         }
 
+        for (Hostage hostage : hostages) {
+            hostage.dispose();
+        }
+
         for (Bullet bullet : Static.getBullets()) {
             bullet.dispose();
         }
@@ -315,6 +412,7 @@ public class GameScreen implements Screen {
         playerLifelabel.setText(player.getLive());
         ammoLabel.setText("Ammo: " + (player.isReloading() ? "Reloading" : (player.getWeapon().getActiveMagazineCapacity()) + "/" + player.getWeapon().getBackupMagazinesCapacity()));
         enemiesLabel.setText(enemies.size());
+        hostagesLabel.setText(hostages.size());
 
         scoreLabel.setText("Score: " + Static.getStatistics().getScore());
 
@@ -322,17 +420,24 @@ public class GameScreen implements Screen {
         timer.update();
         player.update(delta);
 
-        if (Gdx.input.isKeyJustPressed(Static.getOptions().getPause())) {
-            if (popup.isOpen()) {
-                gameStats = GameStats.PAUSE;
-                stage.addActor(popup.pausePopup(skin, GameScreen.this));
-            }
+        for (Item item : Static.getItems()) {
+            item.update(delta);
         }
 
         for (Enemy enemy : enemies) {
             enemy.update(delta);
-            enemy.setPlayerDetected(detectionSystem.isDetected(player, enemy));
+
+            //TODO fix just for player
+            boolean isDetected = detectionSystem.isDetected(player, enemy);
+            enemy.setPlayerDetected(isDetected);
+            if (isDetected) {
+                Static.getStatistics().setEnemiesAlerted(Static.getStatistics().getEnemiesAlerted() + 1);
+            }
             enemy.setBulletComing(detectionSystem.bulletDetection(enemy));
+        }
+
+        for (Hostage hostage : hostages) {
+            hostage.update(delta);
         }
 
         for (Bullet bullet : Static.getBullets()) {
@@ -342,18 +447,21 @@ public class GameScreen implements Screen {
         checkGameState();
         cleanUp.cleanUpBullets();
         cleanUp.cleanUpCharacters();
+        cleanUp.cleanUpItems();
     }
 
-    private int calculateDistance(Player player) {
+    private String calculateDistance(Player player) {
         Vector2 playerPosition = player.getBody().getPosition();
         Rectangle endRectangle = Static.getEnd();
-
-        float distanceInPixels = new Vector2(Converter.coordinates(endRectangle)).dst(playerPosition);
-        return (int) distanceInPixels;
+        float distance = new Vector2(Converter.coordinates(endRectangle)).dst(playerPosition);
+        distance = Math.round(distance * 10) / 10f;
+        int integerPart = (int) distance;
+        int decimalPart = (int) ((distance - integerPart) * 10);
+        return integerPart + "." + (decimalPart + "0");
     }
 
     private void checkGameState() {
-        if (calculateDistance(player) == 0 && enemies.isEmpty()) {
+        if (calculateDistance(player).startsWith("0.") && enemies.isEmpty()) {
             gameStats = GameStats.COMPLETE;
         }
 
@@ -366,7 +474,7 @@ public class GameScreen implements Screen {
         return timer;
     }
 
-    public String getMapName() {
-        return mapName;
+    public Mission getMission() {
+        return mission;
     }
 }
