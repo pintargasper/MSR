@@ -1,0 +1,7 @@
+items.png
+size:128,128
+repeat:none
+ammunition
+bounds:2,2,35,35
+heart
+bounds:2,39,70,70

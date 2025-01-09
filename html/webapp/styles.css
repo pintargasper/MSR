@@ -1,0 +1,107 @@
+canvas {
+    cursor: default;
+    outline: none;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    text-align: center;
+    color: #eeeeee;
+}
+
+a {
+    text-align: center;
+    color: #bbbbff;
+}
+
+.superdev {
+    color: rgb(37,37,37);
+    text-shadow: 0px 1px 1px rgba(250,250,250,0.1);
+    font-size: 50pt;
+    display: block;
+    position: relative;
+    text-decoration: none;
+    background-color: rgb(83,87,93);
+    box-shadow: 0px 3px 0px 0px rgb(34,34,34),
+                0px 7px 10px 0px rgb(17,17,17),
+                inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+                inset 0px -12px 35px 0px rgba(0, 0, 0, .5);
+    width: 70px;
+    height: 70px;
+    border: 0;
+    border-radius: 35px;
+    text-align: center;
+    line-height: 68px;
+}
+
+.superdev:active {
+    box-shadow: 0px 0px 0px 0px rgb(34,34,34),
+                0px 3px 7px 0px rgb(17,17,17),
+                inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+                inset 0px -10px 35px 5px rgba(0, 0, 0, .5);
+    background-color: rgb(83,87,93);
+    top: 3px;
+    color: #fff;
+    text-shadow: 0px 0px 3px rgb(250,250,250);
+}
+
+.superdev:hover {
+    background-color: rgb(100,100,100);
+}
+
+.alert {
+    background-color: #ec2727;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.alert img {
+    max-width: 100px;
+    margin-bottom: 15px;
+}
+
+.alert h4 {
+    font-size: 30px;
+    margin: 0 0 10px;
+}
+
+.alert p {
+    margin: 0 0 10px;
+}
+
+.alert a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+#mobile-message {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    .alert {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .alert img {
+        margin-right: 15px;
+    }
+
+    .alert .mb-3 {
+        margin-bottom: 0;
+    }
+}
