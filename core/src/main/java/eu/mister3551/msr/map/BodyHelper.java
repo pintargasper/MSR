@@ -4,13 +4,15 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import eu.mister3551.msr.Static;
+import eu.mister3551.msr.map.character.Character;
 
 public class BodyHelper {
 
-    private final World world;
+    private World world;
 
-    public BodyHelper(World world) {
+    public BodyHelper setWorld(World world) {
         this.world = world;
+        return this;
     }
 
     public void staticBody(PolygonMapObject polygonMapObject) {
@@ -38,19 +40,62 @@ public class BodyHelper {
         body.createFixture(fixtureDef(shape));
         shape.dispose();
 
-        if (!name.equals("bullet")) {
-            createSensor(body, width, height, name + "-left-side", height / 2);
-            createSensor(body, width, height, name + "-right-side", height / 2);
-            createSensor(body, width, height, name + "-foot", height / 2);
-            createSensor(body, width, height, name + "-foot-backup", (height + 50) / 2);
-            createSensor(body, width, height, name + "-head", (height + 50) / 2);
-        }
+        sensors(body, width, height, name);
         return body;
+    }
+
+    public Body copyBody(Body originalBody, Character character) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = originalBody.getType();
+        bodyDef.position.set(originalBody.getPosition());
+        bodyDef.angle = originalBody.getAngle();
+        bodyDef.linearVelocity.set(originalBody.getLinearVelocity());
+        bodyDef.angularVelocity = originalBody.getAngularVelocity();
+        bodyDef.linearDamping = originalBody.getLinearDamping();
+        bodyDef.angularDamping = originalBody.getAngularDamping();
+        bodyDef.gravityScale = originalBody.getGravityScale();
+        bodyDef.fixedRotation = originalBody.isFixedRotation();
+        bodyDef.bullet = originalBody.isBullet();
+        bodyDef.active = originalBody.isActive();
+        bodyDef.allowSleep = originalBody.isSleepingAllowed();
+
+        Body newBody = world.createBody(bodyDef);
+
+        for (Fixture fixture : originalBody.getFixtureList()) {
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.shape = fixture.getShape();
+            fixtureDef.density = fixture.getDensity();
+            fixtureDef.friction = fixture.getFriction();
+            fixtureDef.restitution = fixture.getRestitution();
+            fixtureDef.isSensor = fixture.isSensor();
+            newBody.createFixture(fixtureDef);
+        }
+
+        createSensor(newBody, character.getWidth(), character.getHeight(), character.getName() + "-left-side", character.getHeight() / 2);
+        createSensor(newBody, character.getWidth(), character.getHeight(), character.getName() + "-right-side", character.getHeight() / 2);
+        createSensor(newBody, character.getWidth(), character.getHeight(), character.getName() + "-foot", character.getHeight() / 2);
+        createSensor(newBody, character.getWidth(), character.getHeight(), character.getName() + "-foot-backup", (character.getHeight() + 50) / 2);
+        createSensor(newBody, character.getWidth(), character.getHeight(), character.getName() + "-jump", (character.getHeight() + 50) / 2);
+        createSensor(newBody, character.getWidth(), character.getHeight(), character.getName() + "-head", (character.getHeight() + 50) / 2);
+
+        newBody.setUserData(originalBody.getUserData());
+        return newBody;
     }
 
     public void destroyBody(Body body) {
         if (body.getFixtureList().size > 0) {
             body.destroyFixture(body.getFixtureList().first());
+        }
+    }
+
+    private void sensors(Body body, float width, float height, String name) {
+        if (!name.equals("bullet")) {
+            createSensor(body, width, height, name + "-left-side", height / 2);
+            createSensor(body, width, height, name + "-right-side", height / 2);
+            createSensor(body, width, height, name + "-foot", height / 2);
+            createSensor(body, width, height, name + "-foot-backup", (height + 50) / 2);
+            createSensor(body, width, height, name + "-jump", (height + 50) / 2);
+            createSensor(body, width, height, name + "-head", (height + 50) / 2);
         }
     }
 
@@ -62,6 +107,8 @@ public class BodyHelper {
         if (userData.equals(name + "-foot")) {
             sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
         } else if (userData.equals(name + "-foot-backup")) {
+            sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
+        } else if (userData.equals(name + "-jump")) {
             sensorShape.setAsBox(width / 4 / Static.PPM, 0.1f / Static.PPM, new Vector2(0, -offsetY / Static.PPM), 0);
         } else if (userData.equals(name + "-right-side")) {
             sensorShape.setAsBox(0.1f / Static.PPM, height / 4 / Static.PPM, new Vector2(width / 2 / Static.PPM, 0), 0);

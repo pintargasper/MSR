@@ -2,7 +2,11 @@ package eu.mister3551.msr.database.object;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Options implements Json.Serializable {
 
     private int id;
@@ -31,10 +35,6 @@ public class Options implements Json.Serializable {
     private int controllerLadderLeft;
     private int controllerLadderRight;
     private int controllerLadderReload;
-
-    public Options() {
-
-    }
 
     @Override
     public void write(Json json) {
@@ -94,197 +94,5 @@ public class Options implements Json.Serializable {
         this.controllerLadderLeft = jsonData.getInt("controllerLadderLeft");
         this.controllerLadderRight = jsonData.getInt("controllerLadderRight");
         this.controllerLadderReload = jsonData.getInt("controllerLadderReload");
-    }
-
-    public int getMusic() {
-        return music;
-    }
-
-    public void setMusic(int music) {
-        this.music = music;
-    }
-
-    public int getSoundEffect() {
-        return soundEffect;
-    }
-
-    public void setSoundEffect(int soundEffect) {
-        this.soundEffect = soundEffect;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public int getPause() {
-        return pause;
-    }
-
-    public void setPause(int pause) {
-        this.pause = pause;
-    }
-
-    public int getKeyboardFootJump() {
-        return keyboardFootJump;
-    }
-
-    public void setKeyboardFootJump(int keyboardFootJump) {
-        this.keyboardFootJump = keyboardFootJump;
-    }
-
-    public int getKeyboardFootLeft() {
-        return keyboardFootLeft;
-    }
-
-    public void setKeyboardFootLeft(int keyboardFootLeft) {
-        this.keyboardFootLeft = keyboardFootLeft;
-    }
-
-    public int getKeyboardFootRight() {
-        return keyboardFootRight;
-    }
-
-    public void setKeyboardFootRight(int keyboardFootRight) {
-        this.keyboardFootRight = keyboardFootRight;
-    }
-
-    public int getKeyboardFootReload() {
-        return keyboardFootReload;
-    }
-
-    public void setKeyboardFootReload(int keyboardFootReload) {
-        this.keyboardFootReload = keyboardFootReload;
-    }
-
-    public int getKeyboardFootShoot() {
-        return keyboardFootShoot;
-    }
-
-    public void setKeyboardFootShoot(int keyboardFootShoot) {
-        this.keyboardFootShoot = keyboardFootShoot;
-    }
-
-    public int getKeyboardLadderUp() {
-        return keyboardLadderUp;
-    }
-
-    public void setKeyboardLadderUp(int keyboardLadderUp) {
-        this.keyboardLadderUp = keyboardLadderUp;
-    }
-
-    public int getKeyboardLadderDown() {
-        return keyboardLadderDown;
-    }
-
-    public void setKeyboardLadderDown(int keyboardLadderDown) {
-        this.keyboardLadderDown = keyboardLadderDown;
-    }
-
-    public int getKeyboardLadderLeft() {
-        return keyboardLadderLeft;
-    }
-
-    public void setKeyboardLadderLeft(int keyboardLadderLeft) {
-        this.keyboardLadderLeft = keyboardLadderLeft;
-    }
-
-    public int getKeyboardLadderRight() {
-        return keyboardLadderRight;
-    }
-
-    public void setKeyboardLadderRight(int keyboardLadderRight) {
-        this.keyboardLadderRight = keyboardLadderRight;
-    }
-
-    public int getKeyboardLadderReload() {
-        return keyboardLadderReload;
-    }
-
-    public void setKeyboardLadderReload(int keyboardLadderReload) {
-        this.keyboardLadderReload = keyboardLadderReload;
-    }
-
-    public int getControllerFootJump() {
-        return controllerFootJump;
-    }
-
-    public void setControllerFootJump(int controllerFootJump) {
-        this.controllerFootJump = controllerFootJump;
-    }
-
-    public int getControllerFootLeft() {
-        return controllerFootLeft;
-    }
-
-    public void setControllerFootLeft(int controllerFootLeft) {
-        this.controllerFootLeft = controllerFootLeft;
-    }
-
-    public int getControllerFootRight() {
-        return controllerFootRight;
-    }
-
-    public void setControllerFootRight(int controllerFootRight) {
-        this.controllerFootRight = controllerFootRight;
-    }
-
-    public int getControllerFootReload() {
-        return controllerFootReload;
-    }
-
-    public void setControllerFootReload(int controllerFootReload) {
-        this.controllerFootReload = controllerFootReload;
-    }
-
-    public int getControllerFootShoot() {
-        return controllerFootShoot;
-    }
-
-    public void setControllerFootShoot(int controllerFootShoot) {
-        this.controllerFootShoot = controllerFootShoot;
-    }
-
-    public int getControllerLadderUp() {
-        return controllerLadderUp;
-    }
-
-    public void setControllerLadderUp(int controllerLadderUp) {
-        this.controllerLadderUp = controllerLadderUp;
-    }
-
-    public int getControllerLadderDown() {
-        return controllerLadderDown;
-    }
-
-    public void setControllerLadderDown(int controllerLadderDown) {
-        this.controllerLadderDown = controllerLadderDown;
-    }
-
-    public int getControllerLadderLeft() {
-        return controllerLadderLeft;
-    }
-
-    public void setControllerLadderLeft(int controllerLadderLeft) {
-        this.controllerLadderLeft = controllerLadderLeft;
-    }
-
-    public int getControllerLadderRight() {
-        return controllerLadderRight;
-    }
-
-    public void setControllerLadderRight(int controllerLadderRight) {
-        this.controllerLadderRight = controllerLadderRight;
-    }
-
-    public int getControllerLadderReload() {
-        return controllerLadderReload;
-    }
-
-    public void setControllerLadderReload(int controllerLadderReload) {
-        this.controllerLadderReload = controllerLadderReload;
     }
 }

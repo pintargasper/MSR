@@ -63,21 +63,21 @@ check-box-of
   index: -1
 check-box-on
   rotate: false
-  xy: 493, 409
+  xy: 1026, 1124
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 scrool-pane-h-scroll-knob
   rotate: false
-  xy: 1115, 1648
+  xy: 976, 937
   size: 30, 13
   orig: 30, 13
   offset: 0, 0
   index: -1
 split-pane-vertical-handle
   rotate: false
-  xy: 1115, 1648
+  xy: 976, 937
   size: 30, 13
   orig: 30, 13
   offset: 0, 0
@@ -175,14 +175,21 @@ touchpad-background
   index: -1
 touchpad-knob
   rotate: false
-  xy: 1026, 1231
+  xy: 493, 399
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
-jump
+door
   rotate: false
   xy: 493, 461
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 1026, 1176
   size: 91, 115
   orig: 91, 115
   offset: 0, 0
@@ -343,7 +350,7 @@ enemy
   index: -1
 heart
   rotate: false
-  xy: 976, 920
+  xy: 766, 822
   size: 30, 30
   orig: 30, 30
   offset: 0, 0

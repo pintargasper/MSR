@@ -8,9 +8,10 @@ import eu.mister3551.msr.database.object.Mission;
 import eu.mister3551.msr.database.object.Options;
 import eu.mister3551.msr.map.character.Character;
 import eu.mister3551.msr.map.character.Player;
-import eu.mister3551.msr.map.character.movement.Collision;
+import eu.mister3551.msr.map.character.movement.MovementCollision;
 import eu.mister3551.msr.map.character.movement.OnZipline;
 import eu.mister3551.msr.map.character.movement.Zipline;
+import eu.mister3551.msr.screen.GameState;
 
 import java.util.ArrayList;
 
@@ -41,21 +42,21 @@ public class Computer extends Device {
     }
 
     @Override
-    public void inputs(float delta, Collision collision) {
-        if (collision.getZipline() != null && getZipline() == null && collision.getZipline().isZiplineCollision()) {
-            setZipline(collision.getZipline());
+    public void inputs(MovementCollision movementCollision, float delta) {
+        if (movementCollision.getZipline() != null && getZipline() == null && movementCollision.getZipline().isZiplineCollision()) {
+            setZipline(movementCollision.getZipline());
         }
 
         Zipline currentZipline = getZipline();
         if (currentZipline != null) {
             onZipline(currentZipline.getPoints());
         } else {
-            walking(delta, collision);
+            walking(movementCollision, delta);
         }
     }
 
     @Override
-    public void walking(float delta, Collision collision) {
+    public void walking(MovementCollision movementCollision, float delta) {
         player.setVelocityX(0);
         player.setVelocityY(0);
 
@@ -63,7 +64,7 @@ public class Computer extends Device {
             && !Gdx.input.isKeyPressed(options.getKeyboardFootRight())
             && !player.isOnLeftSide()) {
 
-            player.setCurrentAnimation(collision.isWater() ? player.getCharacterAnimation().getSwimLeft()
+            player.setCurrentAnimation(movementCollision.isWater() ? player.getCharacterAnimation().getSwimLeft()
                 : player.isOnFloor() ? player.getCharacterAnimation().getWalkLeft()
                 : player.getCharacterAnimation().getJumpLeft());
             player.setLastMove(Character.LastMove.LEFT);
@@ -73,14 +74,14 @@ public class Computer extends Device {
             && !Gdx.input.isKeyPressed(options.getKeyboardFootLeft())
             && !player.isOnRightSide()) {
 
-            player.setCurrentAnimation(collision.isWater() ? player.getCharacterAnimation().getSwimRight()
+            player.setCurrentAnimation(movementCollision.isWater() ? player.getCharacterAnimation().getSwimRight()
                 : player.isOnFloor() ? player.getCharacterAnimation().getWalkRight()
                 : player.getCharacterAnimation().getJumpRight());
             player.setLastMove(Character.LastMove.RIGHT);
             player.setVelocityX(1);
 
         } else if (player.isOnFloor()) {
-            if (!collision.isWater()) {
+            if (!movementCollision.isWater()) {
                 player.setCurrentAnimation(player.getLastMove().equals(Character.LastMove.LEFT)
                     ? player.getCharacterAnimation().getStandLeft()
                     : player.getCharacterAnimation().getStandRight());
@@ -91,33 +92,33 @@ public class Computer extends Device {
             }
         }
 
-        if (Gdx.input.isKeyPressed(options.getKeyboardLadderUp()) && collision.isLadder()) {
-            player.setCurrentAnimation(!collision.isStopOnLadder() ? player.getCharacterAnimation().getClimb() : player.getCharacterAnimation().getStanding());
+        if (Gdx.input.isKeyPressed(options.getKeyboardLadderUp()) && movementCollision.isLadder()) {
+            player.setCurrentAnimation(!movementCollision.isStopOnLadder() ? player.getCharacterAnimation().getClimb() : player.getCharacterAnimation().getStanding());
             player.setVelocityY(player.getSpeedOnLadder());
-        } else if (Gdx.input.isKeyPressed(options.getKeyboardLadderDown()) && collision.isLadder()) {
+        } else if (Gdx.input.isKeyPressed(options.getKeyboardLadderDown()) && movementCollision.isLadder()) {
             player.setCurrentAnimation(player.getCharacterAnimation().getClimb());
             player.setVelocityY(-player.getSpeedOnLadder());
-        } else if (!collision.isStopOnLadder() && collision.isLadder()) {
+        } else if (!movementCollision.isStopOnLadder() && movementCollision.isLadder()) {
             player.setCurrentAnimation(player.getCharacterAnimation().getStandingOnLadder());
         }
 
-        if (player.isOnFloor()) {
+        if (player.isOnJump()) {
             player.setJumps(0);
-            if (player.getVelocityX() == 0 && collision.isStopOnLadder()) {
+            if (player.getVelocityX() == 0 && movementCollision.isStopOnLadder()) {
                 player.setCurrentAnimation(player.getLastMove().equals(Character.LastMove.LEFT) ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
             }
         }
 
-        if (collision.isLadder() && player.getVelocityY() == 0 && !player.isOnFloor()) {
-            player.setCurrentAnimation(!collision.isStopOnLadder() ? player.getCharacterAnimation().getStandingOnLadder() : player.getLastMove().equals(Character.LastMove.LEFT) ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
+        if (movementCollision.isLadder() && player.getVelocityY() == 0 && !player.isOnFloor()) {
+            player.setCurrentAnimation(!movementCollision.isStopOnLadder() ? player.getCharacterAnimation().getStandingOnLadder() : player.getLastMove().equals(Character.LastMove.LEFT) ? player.getCharacterAnimation().getStandLeft() : player.getCharacterAnimation().getStandRight());
         }
 
-        if (Gdx.input.isKeyJustPressed(options.getKeyboardFootJump()) && player.getJumps() < 1 && player.isOnFloor() && !collision.isLadder()) {
+        if (Gdx.input.isKeyJustPressed(options.getKeyboardFootJump()) && player.getJumps() < 1 && player.isOnJump() && player.isBodyOnFloor() && !movementCollision.isLadder()) {
             jump();
             player.getBody().setGravityScale(1);
         }
 
-        if (collision.isLadder()) {
+        if (movementCollision.isLadder()) {
             player.getBody().setGravityScale(0);
             player.getBody().setLinearVelocity(player.getVelocityX() * player.getSpeed(), player.getVelocityY());
         } else {
@@ -125,18 +126,31 @@ public class Computer extends Device {
             player.getBody().setLinearVelocity(player.getVelocityX() * player.getSpeed(), Math.min(player.getBody().getLinearVelocity().y, 25));
         }
 
-        /*if (Gdx.input.isKeyPressed(options.getKeyboardFootShoot()) && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
+        if (Gdx.input.isKeyPressed(options.getKeyboardFootShoot()) && player.getWeapon().getActiveMagazineCapacity() != 0 && isShooting) {
             player.getWeapon().setActiveMagazineCapacity(player.getWeapon().getActiveMagazineCapacity() - player.getOnShoot().shoot(player, delta));
-        }*/
+        }
 
-        /*if (Gdx.input.isKeyJustPressed(options.getKeyboardFootReload() | options.getKeyboardLadderReload()) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
+        if (Gdx.input.isKeyJustPressed(options.getKeyboardFootReload() | options.getKeyboardLadderReload()) && player.getWeapon().getActiveMagazineCapacity() != player.getWeapon().getMagazineCapacity() && player.getWeapon().getBackupMagazinesCapacity() != 0) {
             player.getOnShoot().reload(this, player);
-        }*/
+        }
 
-        if (collision.getDoor() != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            Object map = collision.getDoor().getProperties().get("map");
+        if (movementCollision.getDoor() != null && player.isOnFloor()) {
+            Object map = movementCollision.getDoor().getProperties().get("map");
             if (map != null) {
-                Static.screenChanger.changeScreen("GameScreen", new Mission(map.toString()));
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+
+                    GameState gameState = Static.gameState.values().stream()
+                        .findFirst()
+                        .orElse(null);
+
+                    if (gameState != null) {
+                        Mission mission = new Mission();
+                        mission.setId(gameState.getMission().getId());
+                        mission.setIdUser(gameState.getMission().getIdUser());
+                        mission.setMap(map.toString());
+                        Static.screenChanger.changeScreen("GameScreen", mission);
+                    }
+                }
             }
         }
     }
@@ -150,6 +164,6 @@ public class Computer extends Device {
 
     @Override
     public void onZipline(ArrayList<Vector2> points) {
-        zipline = OnZipline.movement(player.getBody(), player, zipline, points, player.getSpeedOnZipline());
+        zipline = OnZipline.movement(player, zipline, points);
     }
 }

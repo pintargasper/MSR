@@ -16,8 +16,13 @@ import eu.mister3551.msr.database.object.Gear;
 import eu.mister3551.msr.database.object.Mission;
 import eu.mister3551.msr.database.object.Options;
 import eu.mister3551.msr.screen.GameScreen;
+import eu.mister3551.msr.screen.GameState;
 import eu.mister3551.msr.screen.link.Callback;
+import lombok.Setter;
 
+import java.util.ArrayList;
+
+@Setter
 public class Popup {
 
     private Table table;
@@ -344,7 +349,7 @@ public class Popup {
         label = new Label("Time:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        //label = new Label(gameScreen.getTimer().toString(), skin);
+        label = new Label(gameScreen.getTimer().toString(), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -357,7 +362,7 @@ public class Popup {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 close();
-                //gameScreen.gameStats = GameScreen.GameStats.IN_PROCESS;
+                gameScreen.gameStats = GameScreen.GameStats.IN_PROCESS;
                 return true;
             }
         });
@@ -378,7 +383,7 @@ public class Popup {
         return table;
     }
 
-    /*public Table missionCompletePopup(Skin skin, GameScreen gameScreen) {
+    public Table missionCompletePopup(Skin skin, GameScreen gameScreen) {
         setOpen(true);
         table = new Table();
         table.setSize(340.0f, 242.0f);
@@ -531,9 +536,9 @@ public class Popup {
         table1.add(table2).padTop(5.0f);
         table.add(table1).minWidth(400.0f).maxWidth(400.0f);
         return table;
-    }*/
+    }
 
-    /*public Table missionFailedPopup(Skin skin, GameScreen gameScreen) {
+    public Table missionFailedPopup(Skin skin, GameScreen gameScreen) {
         setOpen(true);
         table = new Table();
         table.setSize(340.0f, 242.0f);
@@ -587,7 +592,11 @@ public class Popup {
         label = new Label("Hostage collected:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label((Static.totalHostages - GameScreen.hostages.size()) + "/" + Static.totalHostages, skin);
+        int hostages = 0;
+        for (GameState gameState : Static.gameState.values()) {
+            hostages += gameState.getHostages().size();
+        }
+        label = new Label((Static.totalHostages - hostages) + "/" + Static.totalHostages, skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -598,7 +607,11 @@ public class Popup {
         label = new Label("Enemy killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label((Static.totalEnemies - GameScreen.enemies.size()) + "/" + Static.totalEnemies, skin);
+        int enemies = 0;
+        for (GameState gameState : Static.gameState.values()) {
+            enemies += gameState.getEnemies().size();
+        }
+        label = new Label((Static.totalEnemies - enemies) + "/" + Static.totalEnemies, skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -644,7 +657,7 @@ public class Popup {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 close();
-                Static.screenChanger.changeScreen("GameScreen", gameScreen.getMission());
+                Static.screenChanger.repeat(true).changeScreen("GameScreen", Static.gameState.values().stream().findFirst().get().getMission());
                 return true;
             }
         });
@@ -687,7 +700,7 @@ public class Popup {
         table1.add(table2).padTop(5.0f);
         table.add(table1).minWidth(400.0f).maxWidth(400.0f);
         return table;
-    }*/
+    }
 
     public Table gearPopup(Skin skin, Gear gear) {
         setOpen(true);
@@ -775,9 +788,5 @@ public class Popup {
 
     public boolean isOpen() {
         return !open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
     }
 }

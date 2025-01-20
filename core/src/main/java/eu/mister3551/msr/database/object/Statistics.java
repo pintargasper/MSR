@@ -2,10 +2,14 @@ package eu.mister3551.msr.database.object;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
 public class Statistics implements Json.Serializable {
 
     private Long idUser;
@@ -103,107 +107,11 @@ public class Statistics implements Json.Serializable {
         return map;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
-
-    public void setIdMission(Long idMission) {
-        this.idMission = idMission;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public Map<String, Float> getMoney() {
-        return money;
-    }
-
-    public void setWin(boolean win) {
-        this.win = win;
-    }
-
-    public String getUsedTime() {
-        return usedTime;
-    }
-
-    public void setUsedTime(String usedTime) {
-        this.usedTime = usedTime;
-    }
-
-    public double getDistanceTraveled() {
-        return distanceTraveled;
-    }
-
-    public void setDistanceTraveled(double distanceTraveled) {
-        this.distanceTraveled = distanceTraveled;
-    }
-
-    public int getShotsFired() {
-        return shotsFired;
-    }
-
-    public void setShotsFired(int shotsFired) {
-        this.shotsFired = shotsFired;
-    }
-
-    public int getMissedShots() {
-        return missedShots;
-    }
-
-    public void setMissedShots(int missedShots) {
-        this.missedShots = missedShots;
-    }
-
-    public double getAccuracy() {
-        return accuracy;
-    }
-
     public void setAccuracy() {
         if (this.shotsFired > 0) {
             this.accuracy = Math.round(((this.shotsFired - this.missedShots) / (double) this.shotsFired) * 100 * 100) / 100.0;
         } else {
             this.accuracy = 0;
         }
-    }
-
-    public int getCriticalHits() {
-        return criticalHits;
-    }
-
-    public void setCriticalHits(int criticalHits) {
-        this.criticalHits = criticalHits;
-    }
-
-    public int getHeadshots() {
-        return headshots;
-    }
-
-    public void setHeadshots(int headshots) {
-        this.headshots = headshots;
-    }
-
-    public int getEnemiesAlerted() {
-        return enemiesAlerted;
-    }
-
-    public void setEnemiesAlerted(int enemiesAlerted) {
-        this.enemiesAlerted = enemiesAlerted;
-    }
-
-    public Map<String, Integer> getEnemyTypesKilled() {
-        return enemyTypesKilled;
-    }
-
-    public Map<String, Integer> getHostageTypesKilled() {
-        return hostageTypesKilled;
-    }
-
-    public Map<String, Integer> getItemsCollected() {
-        return itemsCollected;
     }
 }

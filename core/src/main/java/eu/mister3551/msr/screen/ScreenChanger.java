@@ -4,18 +4,35 @@ import com.badlogic.gdx.Screen;
 import eu.mister3551.msr.Main;
 import eu.mister3551.msr.Static;
 import eu.mister3551.msr.database.object.Mission;
+import eu.mister3551.msr.database.object.Statistics;
+
+import java.util.LinkedHashMap;
 
 public class ScreenChanger {
 
     private final Main main;
+    private boolean repeat;
 
     public ScreenChanger(Main main) {
         this.main = main;
     }
 
-    public void changeScreen(String screenName, Mission... mission) {
-        Screen newScreen = null;
+    public ScreenChanger repeat(boolean repeat) {
+        this.repeat = repeat;
+        return this;
+    }
 
+    public void changeScreen(String screenName, Mission... mission) {
+        Screen newScreen = createScreen(screenName, mission);
+
+        if (newScreen != null) {
+            resetStaticState(newScreen instanceof GameScreen);
+            main.setScreen(newScreen);
+        }
+    }
+
+    private Screen createScreen(String screenName, Mission... mission) {
+        Screen newScreen;
         switch (screenName) {
             case "SignInScreen":
                 newScreen = new SignInScreen();
@@ -27,7 +44,11 @@ public class ScreenChanger {
                 newScreen = new MissionScreen();
                 break;
             case "GameScreen":
-                newScreen = new GameScreen(mission[0]);
+                if (repeat) {
+                    resetGameSpecificState();
+                    repeat = false;
+                }
+                newScreen = new GameScreen(mission != null && mission.length > 0 ? mission[0] : null);
                 break;
             case "OptionsScreen":
                 newScreen = new OptionsScreen();
@@ -38,11 +59,23 @@ public class ScreenChanger {
             case "GearScreen":
                 newScreen = new GearScreen();
                 break;
+            default:
+                newScreen = null;
+                break;
         }
+        return newScreen;
+    }
 
-        if (newScreen != null) {
-            Static.stage.clear();
-            main.setScreen(newScreen);
+    private void resetStaticState(boolean isGameScreen) {
+        Static.stage.clear();
+        if (!isGameScreen) {
+            resetGameSpecificState();
         }
+    }
+
+    private void resetGameSpecificState() {
+        Static.gameState = new LinkedHashMap<>();
+        Static.statistics = new Statistics();
+        Static.timer.reset();
     }
 }

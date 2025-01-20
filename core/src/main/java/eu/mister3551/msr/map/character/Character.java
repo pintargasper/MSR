@@ -8,20 +8,30 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import eu.mister3551.msr.map.ObjectData;
 import eu.mister3551.msr.map.character.collision.Collision;
-import lombok.Data;
+import eu.mister3551.msr.map.character.movement.MovementCollision;
+import eu.mister3551.msr.map.character.weapon.OnShoot;
+import eu.mister3551.msr.map.character.weapon.Weapon;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public abstract class Character {
 
     protected TextureAtlas textureAtlas;
     protected CharacterAnimation characterAnimation;
     protected Animation<TextureRegion> currentAnimation;
     protected Collision collision;
-    protected final Body body;
+    protected MovementCollision movementCollision;
+    protected Body body;
     protected final Rectangle bounds;
     protected final String name;
     protected final String type;
     protected final String group;
+    protected float award;
+    protected int life;
+    protected int maxLife;
+    protected int jumps;
     protected float x;
     protected float y;
     protected float velocityX;
@@ -37,9 +47,13 @@ public abstract class Character {
     protected boolean onRightSide;
     protected boolean onFloor;
     protected boolean bodyOnFloor;
-    protected int life;
-    protected int jumps;
+    protected boolean onJump;
+    protected boolean processed;
+    protected boolean animationPaused;
+    protected float pausedTime;
     protected LastMove lastMove;
+    protected Weapon weapon;
+    protected final OnShoot onShoot;
 
     public enum LastMove {
         LEFT, RIGHT, UP, DOWN
@@ -52,17 +66,24 @@ public abstract class Character {
         this.name = objectData.getName();
         this.type = objectData.getType();
         this.group = objectData.getGroup();
+        this.award = objectData.getAward();
         this.width = objectData.getWidth();
         this.height = objectData.getHeight();
+        this.life = objectData.getLife();
+        this.maxLife = objectData.getLife();
+        this.jumps = objectData.getJumps();
         this.x = body.getPosition().x;
         this.y = body.getPosition().y;
         this.velocityX = 0;
         this.velocityY = 0;
-        this.life = objectData.getLife();
         this.speed = objectData.getSpeed();
         this.speedOnLadder = objectData.getSpeedOnLadder();
         this.speedOnZipline = objectData.getSpeedOnZipline();
         this.lastMove = LastMove.RIGHT;
+        this.weapon = objectData.getWeapon();
+        this.onShoot = new OnShoot();
+        this.animationPaused = false;
+        this.pausedTime = 0;
     }
 
     public abstract void show();

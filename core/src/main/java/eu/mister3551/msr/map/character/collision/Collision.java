@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Vector2;
 import eu.mister3551.msr.map.character.Character;
+import eu.mister3551.msr.map.character.movement.MovementCollision;
 import eu.mister3551.msr.map.character.movement.Zipline;
 import eu.mister3551.msr.screen.GameScreen;
 
@@ -12,10 +13,10 @@ import java.util.HashMap;
 
 public class Collision {
 
-    public eu.mister3551.msr.map.character.movement.Collision check(Character character) {
-        return new eu.mister3551.msr.map.character.movement.Collision(
+    public MovementCollision check(Character character) {
+        return new MovementCollision(
             ladder(character),
-            false,
+            stopOnLadder(character),
             water(character),
             zipline(character),
             door(character)
@@ -24,6 +25,13 @@ public class Collision {
 
     private boolean ladder(Character character) {
         return GameScreen.ladders.stream().anyMatch(character.getBounds()::overlaps);
+    }
+
+    private boolean stopOnLadder(Character character) {
+        float offset = 2;
+        return GameScreen.stopOnLadders.stream().anyMatch(rectangle -> character.getBounds().overlaps(rectangle)
+            || (character.getBounds().y <= rectangle.y + rectangle.height + offset && character.getBounds().y >= rectangle.y + rectangle.height - offset) &&
+            (character.getBounds().x < rectangle.x + rectangle.width && character.getBounds().x + character.getBounds().width > rectangle.x));
     }
 
     private boolean water(Character character) {

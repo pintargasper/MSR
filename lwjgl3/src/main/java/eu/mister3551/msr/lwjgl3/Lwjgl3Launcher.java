@@ -8,7 +8,7 @@ import eu.mister3551.msr.Main;
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) {
-            return; // This handles macOS support and helps on Windows.
+            return;
         }
         createApplication();
     }
@@ -20,17 +20,12 @@ public class Lwjgl3Launcher {
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("MSR");
-        //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
-        //// screen tearing. This setting doesn't always work on Linux, so the line after is a safeguard.
         configuration.useVsync(true);
-        //// Limits FPS to the refresh rate of the currently active monitor, plus 1 to try to match fractional
-        //// refresh rates. The Vsync setting above should limit the actual FPS to match the monitor.
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-        //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
-        //// useful for testing performance, but can also be very stressful to some hardware.
-        //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
-        configuration.setWindowedMode(640, 480);
-        //// You can change these files; they are in lwjgl3/src/main/resources/ .
+
+        //configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+        //configuration.setDecorated(false);
+
         configuration.setWindowIcon("logo/logo128.png", "logo/logo64.png", "logo/logo32.png", "logo/logo16.png");
         return configuration;
     }

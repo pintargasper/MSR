@@ -2,7 +2,11 @@ package eu.mister3551.msr.database.object;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Mission implements Json.Serializable {
 
     private int id;
@@ -14,14 +18,6 @@ public class Mission implements Json.Serializable {
     private Long score;
     private String usedTime;
     private Long playedCount;
-
-    public Mission() {
-
-    }
-
-    public Mission(String map) {
-        this.map = map;
-    }
 
     @Override
     public void write(Json json) {
@@ -47,41 +43,5 @@ public class Mission implements Json.Serializable {
         this.score = jsonData.getLong("score");
         this.usedTime = jsonData.getString("usedTime");
         this.map = jsonData.getString("map");
-    }
-
-    public Long getId() {
-        return (long) id;
-    }
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public String getMap() {
-        return map;
-    }
-
-    public Long getScore() {
-        return score;
-    }
-
-    public String getUsedTime() {
-        return usedTime;
-    }
-
-    public Long getPlayedCount() {
-        return playedCount;
     }
 }

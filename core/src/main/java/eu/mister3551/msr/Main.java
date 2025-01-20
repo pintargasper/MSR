@@ -11,13 +11,18 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import eu.mister3551.msr.database.Data;
 import eu.mister3551.msr.database.Token;
 import eu.mister3551.msr.database.object.Account;
+import eu.mister3551.msr.database.object.Statistics;
+import eu.mister3551.msr.map.BodyHelper;
+import eu.mister3551.msr.map.Timer;
 import eu.mister3551.msr.screen.ScreenChanger;
 import eu.mister3551.msr.screen.components.Navigation;
 import eu.mister3551.msr.screen.components.Popup;
 import eu.mister3551.msr.screen.javascript.Native;
 import eu.mister3551.msr.screen.link.Callback;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+import java.util.LinkedHashMap;
+
+/** implementation shared by all platforms. */
 public class Main extends Game {
 
     private Skin skin;
@@ -29,8 +34,10 @@ public class Main extends Game {
         this.stage = Gdx.app.getType().equals(Application.ApplicationType.Android)
             ? new Stage(new ExtendViewport(800, 480))
             : new Stage(new ScreenViewport());
-
-
+        Static.bodyHelper = new BodyHelper();
+        Static.gameState = new LinkedHashMap<>();
+        Static.statistics = new Statistics();
+        Static.timer = new Timer();
         Static.skin = skin;
         Static.stage = stage;
         Static._native = new Native();
@@ -38,7 +45,6 @@ public class Main extends Game {
         Static.popup = new Popup();
         Static.json = new Json();
         Static.data = new Data();
-
         Token token = new Token();
         Static.token = token;
 

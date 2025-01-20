@@ -6,17 +6,24 @@ import com.badlogic.gdx.utils.Json;
 import eu.mister3551.msr.database.Data;
 import eu.mister3551.msr.database.Token;
 import eu.mister3551.msr.database.object.*;
+import eu.mister3551.msr.map.BodyHelper;
+import eu.mister3551.msr.map.Timer;
+import eu.mister3551.msr.screen.GameState;
 import eu.mister3551.msr.screen.ScreenChanger;
 import eu.mister3551.msr.screen.components.Navigation;
 import eu.mister3551.msr.screen.components.Popup;
 import eu.mister3551.msr.screen.javascript.Native;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class Static {
 
     public static final int PPM = 32;
 
+    public static BodyHelper bodyHelper;
+    public static LinkedHashMap<String, GameState> gameState;
+    public static Timer timer;
     public static ScreenChanger screenChanger;
     public static Stage stage;
     public static Skin skin;
@@ -31,4 +38,6 @@ public class Static {
     public static Token token;
     public static ArrayList<Mission> missions;
     public static ArrayList<Gear> gears;
+    public static int totalEnemies;
+    public static int totalHostages;
 }

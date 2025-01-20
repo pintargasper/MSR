@@ -1,24 +1,23 @@
 package eu.mister3551.msr.map.character.movement;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import eu.mister3551.msr.map.character.Player;
 
 import java.util.ArrayList;
 
 public class OnZipline {
 
-    public static Zipline movement(Body body, Player player, Zipline zipline, ArrayList<Vector2> points, float speedOnZipline) {
+    public static Zipline movement(Player player, Zipline zipline, ArrayList<Vector2> points) {
         if (points.size() < 2) {
             return null;
         }
 
         if (zipline.getTargetPoint() == null) {
             zipline.setTargetPoint(points.get(0));
-            body.setTransform(zipline.getTargetPoint(), body.getAngle());
+            player.getBody().setTransform(zipline.getTargetPoint(), player.getBody().getAngle());
         }
 
-        Vector2 currentPosition = body.getPosition();
+        Vector2 currentPosition = player.getBody().getPosition();
 
         if (Math.round(currentPosition.dst(points.get(points.size() - 1))) <= 1f) {
             return null;
@@ -30,12 +29,11 @@ public class OnZipline {
         }
 
         Vector2 direction = zipline.getTargetPoint().cpy().sub(currentPosition);
-        direction.nor().scl(speedOnZipline);
+        direction.nor().scl(player.getSpeedOnZipline());
 
-        //player.setCurrentAnimation(direction.x < 0 ? player.getCharacterAnimation().getZiplineLeft() : player.getCharacterAnimation().getZiplineRight());
-
-        body.setGravityScale(0);
-        body.setLinearVelocity(direction);
+        player.setCurrentAnimation(direction.x < 0 ? player.getCharacterAnimation().getZiplineLeft() : player.getCharacterAnimation().getZiplineRight());
+        player.getBody().setGravityScale(0);
+        player.getBody().setLinearVelocity(direction);
         return zipline;
     }
 }

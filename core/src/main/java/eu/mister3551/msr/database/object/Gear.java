@@ -2,7 +2,11 @@ package eu.mister3551.msr.database.object;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Gear implements Json.Serializable {
 
     private int id;
@@ -11,10 +15,6 @@ public class Gear implements Json.Serializable {
     private String image;
     private float price;
     private String activeWeapon;
-
-    public Gear() {
-
-    }
 
     @Override
     public void write(Json json) {
@@ -31,34 +31,5 @@ public class Gear implements Json.Serializable {
         this.image = jsonData.getString("image");
         this.price = jsonData.getFloat("price");
         this.activeWeapon = jsonData.getString("activeWeapon");
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-
-    public float getPrice() {
-        return price;
-    }
-
-    public String getActiveWeapon() {
-        return activeWeapon;
-    }
-
-    public void setActiveWeapon(String activeWeapon) {
-        this.activeWeapon = activeWeapon;
     }
 }
