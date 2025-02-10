@@ -1,0 +1,420 @@
+
+skin.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+background
+  rotate: false
+  xy: 1, 993
+  size: 1899, 905
+  orig: 1899, 905
+  offset: 0, 0
+  index: -1
+masterminds_puzzle_palace
+  rotate: false
+  xy: 1, 600
+  size: 1187, 391
+  orig: 1187, 391
+  offset: 0, 0
+  index: -1
+training
+  rotate: false
+  xy: 1, 209
+  size: 1182, 389
+  orig: 1182, 389
+  offset: 0, 0
+  index: -1
+
+skin2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+white-pixel
+  rotate: false
+  xy: 1660, 1935
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+button-over
+  rotate: false
+  xy: 1422, 1728
+  size: 150, 46
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button-over
+  rotate: false
+  xy: 1422, 1728
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+check-box-of
+  rotate: false
+  xy: 968, 769
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+check-box-on
+  rotate: false
+  xy: 968, 717
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+scrool-pane-h-scroll-knob
+  rotate: false
+  xy: 1164, 1662
+  size: 30, 13
+  orig: 30, 13
+  offset: 0, 0
+  index: -1
+split-pane-vertical-handle
+  rotate: false
+  xy: 1164, 1662
+  size: 30, 13
+  orig: 30, 13
+  offset: 0, 0
+  index: -1
+scrool-pane-v-scroll-knob
+  rotate: false
+  xy: 1635, 1825
+  size: 13, 30
+  orig: 13, 30
+  offset: 0, 0
+  index: -1
+split-pane-horizontal-handle
+  rotate: false
+  xy: 1635, 1825
+  size: 13, 30
+  orig: 13, 30
+  offset: 0, 0
+  index: -1
+text-button-up
+  rotate: false
+  xy: 370, 66
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+button-up
+  rotate: false
+  xy: 370, 66
+  size: 150, 46
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button-over-navigation
+  rotate: false
+  xy: 1824, 2000
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-button-up-navigation
+  rotate: false
+  xy: 1672, 2000
+  size: 150, 46
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 150, 46
+  offset: 0, 0
+  index: -1
+text-field-background
+  rotate: false
+  xy: 1164, 1677
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+list-background
+  rotate: false
+  xy: 1164, 1677
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 5, 5
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+select-box-background
+  rotate: false
+  xy: 1164, 1677
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+text-tool-tip-background
+  rotate: false
+  xy: 1164, 1677
+  size: 208, 48
+  split: 0, 0, 0, 0
+  pad: 16, 16, 0, 0
+  orig: 208, 48
+  offset: 0, 0
+  index: -1
+touchpad-background-dark
+  rotate: false
+  xy: 493, 567
+  size: 125, 125
+  orig: 125, 125
+  offset: 0, 0
+  index: -1
+touchpad-knob-dark
+  rotate: false
+  xy: 1026, 980
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+touchpad-background-light
+  rotate: false
+  xy: 493, 694
+  size: 125, 125
+  orig: 125, 125
+  offset: 0, 0
+  index: -1
+touchpad-knob-light
+  rotate: false
+  xy: 1026, 1042
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+door-dark
+  rotate: false
+  xy: 620, 704
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+jump-dark
+  rotate: false
+  xy: 852, 587
+  size: 91, 115
+  orig: 91, 115
+  offset: 0, 0
+  index: -1
+reload-dark
+  rotate: false
+  xy: 493, 450
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+shoot-dark
+  rotate: false
+  xy: 620, 587
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+door-light
+  rotate: false
+  xy: 736, 704
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+jump-light
+  rotate: false
+  xy: 1026, 1175
+  size: 91, 115
+  orig: 91, 115
+  offset: 0, 0
+  index: -1
+reload-light
+  rotate: false
+  xy: 736, 587
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+shoot-light
+  rotate: false
+  xy: 852, 704
+  size: 114, 115
+  orig: 114, 115
+  offset: 0, 0
+  index: -1
+OpenSans-Italic-VariableFont_wdth,wght
+  rotate: false
+  xy: 1164, 2008
+  size: 506, 38
+  orig: 506, 38
+  offset: 0, 0
+  index: -1
+OpenSans-Italic-VariableFont_wdth,wght_big_font
+  rotate: false
+  xy: 1164, 1938
+  size: 505, 68
+  orig: 505, 68
+  offset: 0, 0
+  index: -1
+OpenSans-Italic-VariableFont_wdth,wght_light
+  rotate: false
+  xy: 1, 876
+  size: 506, 73
+  orig: 506, 73
+  offset: 0, 0
+  index: -1
+exploration_expedition
+  rotate: false
+  xy: 1, 1662
+  size: 1161, 384
+  orig: 1161, 384
+  offset: 0, 0
+  index: -1
+on_your_own
+  rotate: false
+  xy: 1, 1292
+  size: 1112, 368
+  orig: 1112, 368
+  offset: 0, 0
+  index: -1
+ultimate_challenge_quest
+  rotate: false
+  xy: 1, 951
+  size: 1023, 339
+  orig: 1023, 339
+  offset: 0, 0
+  index: -1
+credits-text
+  rotate: false
+  xy: 1, 33
+  size: 210, 79
+  orig: 210, 79
+  offset: 0, 0
+  index: -1
+gear-text
+  rotate: false
+  xy: 213, 33
+  size: 155, 79
+  orig: 155, 79
+  offset: 0, 0
+  index: -1
+missions-text
+  rotate: false
+  xy: 1164, 1857
+  size: 261, 79
+  orig: 261, 79
+  offset: 0, 0
+  index: -1
+options-text
+  rotate: false
+  xy: 1427, 1857
+  size: 231, 79
+  orig: 231, 79
+  offset: 0, 0
+  index: -1
+92fs
+  rotate: false
+  xy: 1164, 1727
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+arm
+  rotate: false
+  xy: 1, 114
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+fn57
+  rotate: false
+  xy: 259, 244
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+m67-frag
+  rotate: false
+  xy: 259, 114
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+ro933
+  rotate: false
+  xy: 509, 821
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+rpk-74
+  rotate: false
+  xy: 1, 244
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+scorpion
+  rotate: false
+  xy: 767, 821
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+loading
+  rotate: false
+  xy: 1, 374
+  size: 490, 500
+  orig: 490, 500
+  offset: 0, 0
+  index: -1
+logo-text
+  rotate: false
+  xy: 1422, 1776
+  size: 211, 79
+  orig: 211, 79
+  offset: 0, 0
+  index: -1
+bullet
+  rotate: false
+  xy: 1, 1
+  size: 50, 30
+  orig: 50, 30
+  offset: 0, 0
+  index: -1
+heart-dark
+  rotate: false
+  xy: 1574, 1744
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+enemy
+  rotate: false
+  xy: 493, 379
+  size: 66, 69
+  orig: 66, 69
+  offset: 0, 0
+  index: -1
+hostage
+  rotate: false
+  xy: 1026, 1104
+  size: 66, 69
+  orig: 66, 69
+  offset: 0, 0
+  index: -1
+heart-light
+  rotate: false
+  xy: 1374, 1695
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1

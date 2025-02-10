@@ -1,0 +1,195 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	OpenSans-Italic-VariableFont_wdthwght: {
+		file: "OpenSans-Italic-VariableFont_wdth,wght.fnt"
+		scaledSize: -1
+		markupEnabled: false
+		flip: false
+	}
+	OpenSans-Italic-VariableFont_wdthwght_big_font: {
+		file: "OpenSans-Italic-VariableFont_wdth,wght_big_font.fnt"
+		scaledSize: -1
+		markupEnabled: false
+		flip: false
+	}
+	OpenSans-Italic-VariableFont_wdthwght_light: {
+		file: "OpenSans-Italic-VariableFont_wdth,wght_light.fnt"
+		scaledSize: -1
+		markupEnabled: false
+		flip: false
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	RGBA_0_0_0_255: {
+		r: 0
+		g: 0
+		b: 0
+		a: 1
+	}
+	RGBA_206_18_18_255: {
+		r: 0.80784315
+		g: 0.07058824
+		b: 0.07058824
+		a: 1
+	}
+	RGBA_236_39_39_255: {
+		r: 0.9254902
+		g: 0.15294118
+		b: 0.15294118
+		a: 1
+	}
+	RGBA_238_238_238_255: {
+		r: 0.93333334
+		g: 0.93333334
+		b: 0.93333334
+		a: 1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	text-field-cursor: {
+		name: white-pixel
+		color: RGBA_206_18_18_255
+		minWidth: 1
+		minHeight: 10
+	}
+	text-field-selection: {
+		name: white-pixel
+		color: RGBA_206_18_18_255
+		minWidth: 5
+		minHeight: 10
+	}
+	scroll-pane-table-background: {
+		name: white-pixel
+		color: RGBA_238_238_238_255
+		minWidth: 10
+		minHeight: 10
+	}
+	list-selection: {
+		name: white-pixel
+		color: RGBA_206_18_18_255
+		minWidth: 10
+		minHeight: 10
+	}
+	list-over: {
+		name: white-pixel
+		color: RGBA_236_39_39_255
+		minWidth: 10
+		minHeight: 10
+	}
+	table-background: {
+		name: white-pixel
+		color: RGBA_238_238_238_255
+		minWidth: 5
+		minHeight: 5
+	}
+	line-separator: {
+		name: white-pixel
+		color: RGBA_238_238_238_255
+		minWidth: 10
+		minHeight: 5
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: button-up
+		over: button-over
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: {
+		checkboxOn: check-box-on
+		checkboxOff: check-box-of
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColor: RGBA_0_0_0_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColor: RGBA_0_0_0_255
+	}
+	title_label: {
+		font: OpenSans-Italic-VariableFont_wdthwght_big_font
+		fontColor: RGBA_0_0_0_255
+	}
+	light: {
+		font: OpenSans-Italic-VariableFont_wdthwght_light
+		fontColor: RGBA_238_238_238_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColorSelected: RGBA_0_0_0_255
+		fontColorUnselected: RGBA_238_238_238_255
+		selection: list-selection
+		over: list-over
+		background: list-background
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		hScrollKnob: scrool-pane-h-scroll-knob
+		vScrollKnob: scrool-pane-v-scroll-knob
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColor: RGBA_0_0_0_255
+		overFontColor: RGBA_236_39_39_255
+		background: select-box-background
+		scrollStyle: default
+		listStyle: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
+	default-horizontal: {
+		handle: split-pane-horizontal-handle
+	}
+	default-vertical: {
+		handle: split-pane-vertical-handle
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColor: RGBA_0_0_0_255
+		up: text-button-up
+		over: text-button-over
+	}
+	navigation: {
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColor: RGBA_0_0_0_255
+		up: text-button-up-navigation
+		over: text-button-over-navigation
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+	default: {
+		font: OpenSans-Italic-VariableFont_wdthwght
+		fontColor: RGBA_0_0_0_255
+		focusedFontColor: RGBA_0_0_0_255
+		background: text-field-background
+		cursor: text-field-cursor
+		selection: text-field-selection
+		messageFontColor: RGBA_238_238_238_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+		background: text-tool-tip-background
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
+	default: {
+		background: touchpad-background-dark
+		knob: touchpad-knob-dark
+	}
+	light: {
+		background: touchpad-background-light
+		knob: touchpad-knob-light
+	}
+}
+}
