@@ -30,7 +30,6 @@ public class MissionScreen implements Screen {
         this.navigation = Constants.navigation;
         this.popup = Constants.popup;
         this.missions = Constants.missions;
-        Constants.screenChanger.reset();
     }
 
     @Override

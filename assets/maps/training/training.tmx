@@ -89,7 +89,7 @@
       <property name="jumps" type="int" value="1"/>
       <property name="life" type="int" value="100"/>
       <property name="penalty" value=""/>
-      <property name="sensors" value="left-side,right-side,jump,bottom-left,bottom-right"/>
+      <property name="sensors" value="head,left-side,right-side,jump,bottom-left,bottom-right"/>
       <property name="skin" value=""/>
       <property name="speed" type="int" value="10"/>
       <property name="speedOnLadder" type="int" value="5"/>
@@ -142,7 +142,11 @@
   </group>
   <group id="17" name="Collisions">
    <objectgroup id="4" name="Doors">
-    <object id="7" name="end" x="1960" y="1079" width="70" height="111"/>
+    <object id="7" name="end" x="1960" y="1079" width="70" height="111">
+     <properties>
+      <property name="map" value="end-game"/>
+     </properties>
+    </object>
     <object id="8" name="house" x="1120" y="1079.5" width="70" height="110.5">
      <properties>
       <property name="map" value="house1.tmx"/>

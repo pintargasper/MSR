@@ -40,23 +40,34 @@ public class WorldCollision implements ContactListener {
         for (Enemy enemy : Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getEnemies()) {
             BodyUserData userData = (BodyUserData) enemy.getBody().getUserData();
 
-            if (userData != null && isContact(contact, userData.getSensors()[2])) {
-                enemy.setJumping(false);
-            }
-
-            if (userData != null && isContact(contact, userData.getSensors()[0])) {
-                enemy.setLeftSide(true);
-            }
-
-            if (userData != null && isContact(contact, userData.getSensors()[1])) {
-                enemy.setRightSide(true);
+            if (userData != null && isContact(contact, userData.getSensors()[0]) && !enemy.isProcessed()) {
+                String enemyType = enemy.getType().replaceAll("\\d+$", "").toLowerCase();
+                Constants.statistics.getEnemyTypesKilled().put(enemyType, Constants.statistics.getEnemyTypesKilled().getOrDefault(enemyType, 0) + 1);
+                Constants.statistics.getMoney().put("enemies", Constants.statistics.getMoney().getOrDefault("enemies", 0.0f) + enemy.getAward());
+                Constants.statistics.setScore((int) (Constants.statistics.getScore() + enemy.getAward()));
+                Constants.statistics.setHeadshots(Constants.statistics.getHeadshots() + 1);
+                enemy.turnOffLight();
+                enemy.setProcessed(true);
+                Constants.gameScreen.getEnemiesToRemove().add(enemy);
             }
 
             if (userData != null && isContact(contact, userData.getSensors()[3])) {
-                enemy.setLeftOffset(false);
+                enemy.setJumping(false);
+            }
+
+            if (userData != null && isContact(contact, userData.getSensors()[1])) {
+                enemy.setLeftSide(true);
+            }
+
+            if (userData != null && isContact(contact, userData.getSensors()[2])) {
+                enemy.setRightSide(true);
             }
 
             if (userData != null && isContact(contact, userData.getSensors()[4])) {
+                enemy.setLeftOffset(false);
+            }
+
+            if (userData != null && isContact(contact, userData.getSensors()[5])) {
                 enemy.setRightOffset(false);
             }
         }
@@ -89,23 +100,23 @@ public class WorldCollision implements ContactListener {
         for (Enemy enemy : Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getEnemies()) {
             BodyUserData userData = (BodyUserData) enemy.getBody().getUserData();
 
-            if (userData != null && isContact(contact, userData.getSensors()[2])) {
+            if (userData != null && isContact(contact, userData.getSensors()[3])) {
                 enemy.setJumping(true);
             }
 
-            if (userData != null && isContact(contact, userData.getSensors()[0])) {
+            if (userData != null && isContact(contact, userData.getSensors()[1])) {
                 enemy.setLeftSide(false);
             }
 
-            if (userData != null && isContact(contact, userData.getSensors()[1])) {
+            if (userData != null && isContact(contact, userData.getSensors()[2])) {
                 enemy.setRightSide(false);
             }
 
-            if (userData != null && isContact(contact, userData.getSensors()[3])) {
+            if (userData != null && isContact(contact, userData.getSensors()[4])) {
                 enemy.setLeftOffset(true);
             }
 
-            if (userData != null && isContact(contact, userData.getSensors()[4])) {
+            if (userData != null && isContact(contact, userData.getSensors()[5])) {
                 enemy.setRightOffset(true);
             }
         }
@@ -141,6 +152,10 @@ public class WorldCollision implements ContactListener {
             userDataB = ((BodyUserData) userDataB).getName();
 
 
+            if ("enemy1-head".equals(userDataA) && "enemy1-head".equals(userDataB)) {
+                System.out.println("enemy");
+            }
+
             if ("bullet".equals(userDataA) && "bullet".equals(userDataB)) {
                 handleBulletCollision(contact);
             }
@@ -148,6 +163,17 @@ public class WorldCollision implements ContactListener {
             if ("player".equals(userDataA) && "bullet".equals(userDataB)
                 || "player".equals(userDataB) && "bullet".equals(userDataA)) {
                 handleBulletCollision(contact);
+
+                int bulletDamage = 0;
+                for (Bullet bullet : Constants.gameScreen.getBullets()) {
+                    String bulletName = ((BodyUserData) bullet.getBody().getUserData()).getName();
+                    if (userDataA.equals(bulletName) || userDataB.equals(bulletName)) {
+                        bulletDamage = bullet.getDamage();
+                        Constants.gameScreen.getBullets().remove(bullet);
+                        break;
+                    }
+                }
+                player.setLife(Math.max(0, player.getLife() - bulletDamage));
             }
 
             if ((userDataA.toString().matches("enemy\\d*") && "bullet".equals(userDataB))
@@ -162,6 +188,14 @@ public class WorldCollision implements ContactListener {
                             String bulletName = ((BodyUserData) bullet.getBody().getUserData()).getName();
                             if (userDataA.equals(bulletName) || userDataB.equals(bulletName)) {
                                 bulletDamage = bullet.getDamage();
+                                if (bullet.getOwner().equals("player")) {
+                                    Constants.statistics.setShotsHit(Constants.statistics.getShotsHit() + 1);
+
+                                    if (player.getLife() < 40) {
+                                        Constants.statistics.setCriticalHits(Constants.statistics.getCriticalHits() + 1);
+                                        player.setLife(player.getLife() + bulletDamage / 2);
+                                    }
+                                }
                                 Constants.gameScreen.getBullets().remove(bullet);
                                 break;
                             }
@@ -195,6 +229,9 @@ public class WorldCollision implements ContactListener {
                             String bulletName = ((BodyUserData) bullet.getBody().getUserData()).getName();
                             if (userDataA.equals(bulletName) || userDataB.equals(bulletName)) {
                                 bulletDamage = bullet.getDamage();
+                                if (bullet.getOwner().equals("player")) {
+                                    Constants.statistics.setShotsHit(Constants.statistics.getShotsHit() + 1);
+                                }
                                 Constants.gameScreen.getBullets().remove(bullet);
                                 break;
                             }
@@ -205,10 +242,8 @@ public class WorldCollision implements ContactListener {
                             return;
                         }
 
-                        String enemyType = hostage.getType().replaceAll("\\d+$", "").toLowerCase();
-                        Constants.statistics.getEnemyTypesKilled().put(enemyType, Constants.statistics.getEnemyTypesKilled().getOrDefault(enemyType, 0) + 1);
-                        Constants.statistics.getMoney().put("enemies", Constants.statistics.getMoney().getOrDefault("enemies", 0.0f) + hostage.getAward());
-                        Constants.statistics.setScore((int) (Constants.statistics.getScore() + hostage.getAward()));
+                        String hostageType = hostage.getType().replaceAll("\\d+$", "").toLowerCase();
+                        Constants.statistics.getHostageTypesKilled().put(hostageType, Constants.statistics.getHostageTypesKilled().getOrDefault(hostageType, 0) + 1);
                         hostage.turnOffLight();
                         hostage.setProcessed(true);
                         Constants.gameScreen.getHostageToRemove().add(hostage);
@@ -226,6 +261,9 @@ public class WorldCollision implements ContactListener {
                         String bulletName = ((BodyUserData) bullet.getBody().getUserData()).getName();
                         if (userDataA.equals(bulletName) || userDataB.equals(bulletName)) {
                             bulletDamage = bullet.getDamage();
+                            if (bullet.getOwner().equals("player")) {
+                                Constants.statistics.setShotsHit(Constants.statistics.getShotsHit() + 1);
+                            }
                             Constants.gameScreen.getBullets().remove(bullet);
                             break;
                         }

@@ -19,7 +19,7 @@ import eu.mister3551.msr.map.character.Character;
 import eu.mister3551.msr.map.character.Player;
 import eu.mister3551.msr.map.character.movement.OnZipline;
 import eu.mister3551.msr.map.character.movement.Zipline;
-import lombok.Setter;
+import eu.mister3551.msr.screen.GameScreen;
 
 public class Mobile extends Device {
 
@@ -212,9 +212,13 @@ public class Mobile extends Device {
             if (map != null) {
                 doorImage.setVisible(true);
                 if (moveDoorPressed) {
-                    Mission mission = new Mission();
-                    mission.setMap(map.toString());
-                    Constants.screenChanger.changeScreen("GameScreen", mission);
+                    if (map.toString().matches("end-game")) {
+                        Constants.gameScreen.gameStats = GameScreen.GameStats.COMPLETE;
+                    } else {
+                        Mission mission = Constants.gameScreen.getMission();
+                        mission.setMap(map.toString());
+                        Constants.screenChanger.changeScreen("GameScreen", mission);
+                    }
                 }
             }
         } else {

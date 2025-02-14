@@ -1,7 +1,6 @@
 package eu.mister3551.msr.map.character.control;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import eu.mister3551.msr.Constants;
@@ -11,6 +10,7 @@ import eu.mister3551.msr.map.character.Character;
 import eu.mister3551.msr.map.character.Player;
 import eu.mister3551.msr.map.character.movement.OnZipline;
 import eu.mister3551.msr.map.character.movement.Zipline;
+import eu.mister3551.msr.screen.GameScreen;
 
 public class Computer extends Device {
 
@@ -146,9 +146,13 @@ public class Computer extends Device {
             Object map = player.getMovementCollision().getDoor().getProperties().get("map");
             if (map != null) {
                 if (Gdx.input.isKeyJustPressed(options.getKeyboardFootDoor())) {
-                    Mission mission = new Mission();
-                    mission.setMap(map.toString());
-                    Constants.screenChanger.changeScreen("GameScreen", mission);
+                    if (map.toString().matches("end-game")) {
+                        Constants.gameScreen.gameStats = GameScreen.GameStats.COMPLETE;
+                    } else {
+                        Mission mission = Constants.gameScreen.getMission();
+                        mission.setMap(map.toString());
+                        Constants.screenChanger.changeScreen("GameScreen", mission);
+                    }
                 }
             }
         }

@@ -9,6 +9,7 @@ import eu.mister3551.msr.map.object.ObjectData;
 import eu.mister3551.msr.map.character.control.Computer;
 import eu.mister3551.msr.map.character.control.Controller;
 import eu.mister3551.msr.map.character.control.Mobile;
+import eu.mister3551.msr.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -102,6 +103,10 @@ public class Player extends Character {
             && (currentAnimation.equals(characterAnimation.getWalkLeft())
             || currentAnimation.equals(characterAnimation.getStandLeft())
             || currentAnimation.equals(characterAnimation.getJumpLeft())) ? 45 : 0;
+
+        if (getLife() == 0) {
+            Constants.gameScreen.gameStats = GameScreen.GameStats.FAILED;
+        }
     }
 
     @Override

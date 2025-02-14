@@ -85,7 +85,7 @@ public class BodyHelper {
             String name = userData.getName();
 
             if ((name + "-head").equals(sensor.trim())) {
-                boxWidth = width / 3.5f / Constants.PPM;
+                boxWidth = width / 3.3f / Constants.PPM;
                 boxHeight = height / 8 / Constants.PPM;
                 position.set(0, height / 6 / Constants.PPM);
             } else if ((name + "-jump").equals(sensor.trim())) {

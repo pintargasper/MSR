@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import eu.mister3551.msr.Constants;
 import eu.mister3551.msr.database.object.Mission;
+import eu.mister3551.msr.database.object.Statistics;
 import eu.mister3551.msr.map.*;
 import eu.mister3551.msr.map.character.Enemy;
 import eu.mister3551.msr.map.character.Hostage;
@@ -32,6 +33,7 @@ import eu.mister3551.msr.screen.camera.Camera;
 import eu.mister3551.msr.screen.components.Popup;
 import eu.mister3551.msr.screen.gamescreen.Timer;
 import eu.mister3551.msr.screen.gamescreen.Visualisation;
+import eu.mister3551.msr.screen.link.Callback;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -110,7 +112,6 @@ public class GameScreen implements Screen {
         new Generator(rayHandler).generate(mission.getMap());
         gameStats = GameStats.IN_PROCESS;
         Constants.gameScreen = this;
-
         RayHandler.setGammaCorrection(true);
         RayHandler.useDiffuseLight(gameState.getGameStates().get(mission.getMap()).isDiffuseLight());
         rayHandler.setCulling(true);
@@ -280,14 +281,13 @@ public class GameScreen implements Screen {
                 resumeGame(delta);
                 break;
             case PAUSE:
-            case END:
                 pauseGame();
                 break;
             case COMPLETE:
-                //showCompletePopup();
+                completeMission();
                 break;
             case FAILED:
-                //showEndPopup();
+                failedMission();
                 break;
         }
         stage.act(delta);
@@ -428,10 +428,70 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void failedMission() {
+        gameStats = GameStats.END;
+
+        Constants.data.insertMission(statistics(false), new Callback() {
+            @Override
+            public void onSuccess(Object object) {
+                Gdx.app.postRunnable(() -> {
+                    if (popup.isOpen()) {
+                        stage.addActor(popup.missionFailedPopup(skin, GameScreen.this));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Gdx.app.postRunnable(() -> {
+                    if (popup.isOpen()) {
+                        stage.addActor(popup.errorPopup(skin, errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
+    private void completeMission() {
+        gameStats = GameStats.END;
+
+        Constants.data.insertMission(statistics(true), new Callback() {
+            @Override
+            public void onSuccess(Object object) {
+                Gdx.app.postRunnable(() -> {
+                    if (popup.isOpen()) {
+                        stage.addActor(popup.missionCompletePopup(skin, GameScreen.this));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Gdx.app.postRunnable(() -> {
+                    if (popup.isOpen()) {
+                        stage.addActor(popup.errorPopup(skin, errorMessage));
+                    }
+                });
+            }
+        });
+    }
+
     private void synchronization() {
         for (Helper helper : Constants.screenChanger.getGameState().getGameStates().values()) {
             helper.getPlayer().setWeapon(player.getWeapon());
             helper.getPlayer().setLife(player.getLife());
         }
+    }
+
+    private Statistics statistics(boolean win) {
+        Statistics statistics = Constants.statistics;
+        statistics.setIdUser(Long.valueOf(mission.getIdUser()));
+        statistics.setIdMission((long) mission.getId());
+        statistics.setUsedTime(timer.string());
+        statistics.setAccuracy();
+        statistics.setWin(win);
+        statistics.setTotalMoney();
+        statistics.setDistanceTraveled(distance.calculateProgress(player));
+        return statistics;
     }
 }

@@ -45,6 +45,8 @@ public class Helper {
     private final BodyHelper bodyHelper;
     private boolean diffuseLight;
     private float light;
+    private int totalEnemies;
+    private int totalHostages;
 
     public Helper() {
         this.world = new World(new Vector2(0, -25), true);
@@ -72,6 +74,9 @@ public class Helper {
 
         parseStaticComponents(staticComponents);
         parseComponents(components);
+
+        totalEnemies = enemies.size();
+        totalHostages = hostages.size();
 
         orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         return this;

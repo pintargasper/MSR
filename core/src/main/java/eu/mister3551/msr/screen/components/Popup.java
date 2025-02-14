@@ -19,6 +19,8 @@ import eu.mister3551.msr.screen.GameScreen;
 import eu.mister3551.msr.screen.link.Callback;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Setter
 public class Popup {
 
@@ -264,7 +266,7 @@ public class Popup {
                         Constants.options = (Options) object;
                         Gdx.app.postRunnable(() -> {
                             setOpen(false);
-                            Constants.screenChanger.changeScreen("GameScreen", mission);
+                            Constants.screenChanger.reset().changeScreen("GameScreen", mission);
                         });
                     }
 
@@ -380,7 +382,7 @@ public class Popup {
         return table;
     }
 
-    /*public Table missionCompletePopup(Skin skin, GameScreen gameScreen) {
+    public Table missionCompletePopup(Skin skin, GameScreen gameScreen) {
         setOpen(true);
         table = new Table();
         table.setSize(340.0f, 242.0f);
@@ -486,11 +488,14 @@ public class Popup {
         table1.row();
         table2 = new Table();
 
-        TextButton textButton = new TextButton("Continue", skin, "navigation");
+        TextButton textButton = new TextButton("Repeat", skin, "navigation");
         textButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 close();
+                Mission mission = gameScreen.getMission();
+                mission.setMap(Constants.screenChanger.getMapName());
+                Constants.screenChanger.reset().changeScreen("GameScreen", mission);
                 return true;
             }
         });
@@ -533,9 +538,9 @@ public class Popup {
         table1.add(table2).padTop(5.0f);
         table.add(table1).minWidth(400.0f).maxWidth(400.0f);
         return table;
-    }*/
+    }
 
-    /*public Table missionFailedPopup(Skin skin, GameScreen gameScreen) {
+    public Table missionFailedPopup(Skin skin, GameScreen gameScreen) {
         setOpen(true);
         table = new Table();
         table.setSize(340.0f, 242.0f);
@@ -589,11 +594,10 @@ public class Popup {
         label = new Label("Hostage collected:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        int hostages = 0;
-        for (GameState gameState : Constants.gameState.values()) {
-            hostages += gameState.getHostages().size();
-        }
-        label = new Label((Constants.totalHostages - hostages) + "/" + Constants.totalHostages, skin);
+        label = new Label((
+            Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalHostages()
+                - Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getHostages().size()
+                + "/" + Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalHostages()), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -604,11 +608,11 @@ public class Popup {
         label = new Label("Enemy killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        int enemies = 0;
-        for (GameState gameState : Constants.gameState.values()) {
-            enemies += gameState.getEnemies().size();
-        }
-        label = new Label((Constants.totalEnemies - enemies) + "/" + Constants.totalEnemies, skin);
+        //TODO total enemies / total hostages
+        label = new Label((
+            Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalEnemies()
+                - Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getEnemies().size()
+                + "/" + Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalEnemies()), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -630,7 +634,7 @@ public class Popup {
         label = new Label("Used time:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        //label = new Label(gameScreen.getTimer().toString(), skin);
+        label = new Label(gameScreen.getTimer().toString(), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -654,7 +658,9 @@ public class Popup {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 close();
-                //Constants.screenChanger.repeat(true).changeScreen("GameScreen", Constants.gameState.values().stream().findFirst().get().getMission());
+                Mission mission = gameScreen.getMission();
+                mission.setMap(Constants.screenChanger.getMapName());
+                Constants.screenChanger.reset().changeScreen("GameScreen", mission);
                 return true;
             }
         });
@@ -697,7 +703,7 @@ public class Popup {
         table1.add(table2).padTop(5.0f);
         table.add(table1).minWidth(400.0f).maxWidth(400.0f);
         return table;
-    }*/
+    }
 
     public Table gearPopup(Skin skin, Gear gear) {
         setOpen(true);

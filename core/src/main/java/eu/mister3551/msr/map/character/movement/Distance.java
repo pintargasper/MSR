@@ -43,17 +43,18 @@ public class Distance {
         return integerPart + "." + decimalPart + " m";
     }
 
-    /*public double calculateProgress(Player player, GameState gameState) {
+    //TODO improve calculateProgress
+    public double calculateProgress(Player player) {
         Vector2 playerPosition = player.getBody().getPosition();
 
-        Rectangle startRectangle = GameScreen.doors.stream()
+        Rectangle startRectangle = Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getDoors().stream()
             .filter(object -> "start".equals(object.getName()))
             .map(object -> (RectangleMapObject) object)
             .findFirst()
             .map(RectangleMapObject::getRectangle)
             .orElse(null);
 
-        Rectangle endRectangle = GameScreen.doors.stream()
+        Rectangle endRectangle = Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getDoors().stream()
             .filter(object -> "end".equals(object.getName()))
             .map(object -> (RectangleMapObject) object)
             .findFirst()
@@ -68,6 +69,8 @@ public class Distance {
         float traveledDistance = new Vector2(playerPosition).dst(Converter.coordinates(startRectangle));
         double progress = Math.round((traveledDistance / totalDistance * 100));
 
-        return (gameState.getEnemies().isEmpty() && gameState.getHostages().isEmpty() && progress >= 98 && progress <= 102) ? 100 : progress;
-    }*/
+        return (Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getEnemies().isEmpty()
+            && Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getHostages().isEmpty()
+            && progress >= 98 && progress <= 102) ? 100 : progress;
+    }
 }

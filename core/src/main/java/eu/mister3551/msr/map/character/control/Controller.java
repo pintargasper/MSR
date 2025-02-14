@@ -2,7 +2,6 @@ package eu.mister3551.msr.map.character.control;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +13,7 @@ import eu.mister3551.msr.map.character.Character;
 import eu.mister3551.msr.map.character.Player;
 import eu.mister3551.msr.map.character.movement.OnZipline;
 import eu.mister3551.msr.map.character.movement.Zipline;
+import eu.mister3551.msr.screen.GameScreen;
 
 public class Controller extends Device implements ControllerListener {
 
@@ -161,11 +161,14 @@ public class Controller extends Device implements ControllerListener {
         if (player.getMovementCollision().getDoor() != null) {
             Object map = player.getMovementCollision().getDoor().getProperties().get("map");
             if (map != null) {
-                //TODO fix to only call once
                 if (controller.getButton(2) && !buttonPressed) {
-                    Mission mission = new Mission();
-                    mission.setMap(map.toString());
-                    Constants.screenChanger.changeScreen("GameScreen", mission);
+                    if (map.toString().matches("end-game")) {
+                        Constants.gameScreen.gameStats = GameScreen.GameStats.COMPLETE;
+                    } else {
+                        Mission mission = Constants.gameScreen.getMission();
+                        mission.setMap(map.toString());
+                        Constants.screenChanger.changeScreen("GameScreen", mission);
+                    }
                     buttonPressed = true;
                     return;
                 } else if (!controller.getButton(2)) {

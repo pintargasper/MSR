@@ -12,6 +12,7 @@ import lombok.Getter;
 @Getter
 public class ScreenChanger {
 
+    private String mapName;
     private final Main main;
     private GameState gameState;
     private boolean resetGame;
@@ -22,9 +23,23 @@ public class ScreenChanger {
     }
 
     public void changeScreen(String screenName, Mission... mission) {
+
+        if (this.mapName == null && mission.length > 0) {
+            this.mapName = mission[0].getMap();
+        }
+
         Screen newScreen = createScreen(screenName, mission);
         Constants.stage.clear();
         main.setScreen(newScreen);
+    }
+
+    public ScreenChanger reset() {
+        this.resetGame = true;
+
+        if (Constants.gameScreen != null) {
+            this.gameState = new GameState(Constants.gameScreen.getMission());
+        }
+        return this;
     }
 
     private Screen createScreen(String screenName, Mission... mission) {
@@ -62,9 +77,5 @@ public class ScreenChanger {
                 break;
         }
         return newScreen;
-    }
-
-    public void reset() {
-        this.resetGame = true;
     }
 }

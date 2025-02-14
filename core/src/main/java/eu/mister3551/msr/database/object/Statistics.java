@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO enemies alerted
 @Getter
 @Setter
 public class Statistics implements Json.Serializable {
@@ -20,6 +21,7 @@ public class Statistics implements Json.Serializable {
     private String usedTime;
     private double distanceTraveled;
     private int shotsFired;
+    private int shotsHit;
     private int missedShots;
     private double accuracy;
     private int criticalHits;
@@ -77,7 +79,6 @@ public class Statistics implements Json.Serializable {
         this.criticalHits = jsonData.getInt("criticalHits");
         this.headshots = jsonData.getInt("headshots");
         this.enemiesAlerted = jsonData.getInt("enemiesAlerted");
-
         this.enemyTypesKilled = readIntMap(jsonData.get("enemyTypesKilled"));
         this.hostageTypesKilled = readIntMap(jsonData.get("hostageTypesKilled"));
         this.itemsCollected = readIntMap(jsonData.get("itemsCollected"));
@@ -108,10 +109,14 @@ public class Statistics implements Json.Serializable {
     }
 
     public void setAccuracy() {
-        if (this.shotsFired > 0) {
-            this.accuracy = Math.round(((this.shotsFired - this.missedShots) / (double) this.shotsFired) * 100 * 100) / 100.0;
-        } else {
-            this.accuracy = 0;
-        }
+        missedShots = shotsFired - shotsHit;
+        accuracy = shotsFired > 0 ? Math.round(((this.shotsFired - this.missedShots) / (double) this.shotsFired) * 100 * 100) / 100.0 : 0;
+    }
+
+    public void setTotalMoney() {
+        double total = money.entrySet().stream()
+            .mapToDouble(entry -> entry.getKey().matches("ammoCosts") ? -entry.getValue() : entry.getValue())
+            .sum();
+        money.put("total", (float) total);
     }
 }

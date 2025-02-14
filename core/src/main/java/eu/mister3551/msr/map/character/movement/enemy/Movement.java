@@ -11,7 +11,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 
-//TODO enemy improve movement
+//TODO improve enemy movement
 @Getter
 public class Movement {
 
