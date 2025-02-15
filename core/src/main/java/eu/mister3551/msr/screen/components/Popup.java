@@ -595,9 +595,8 @@ public class Popup {
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
         label = new Label((
-            Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalHostages()
-                - Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getHostages().size()
-                + "/" + Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalHostages()), skin);
+            Constants.screenChanger.getGameState().getTakeOfHostages()
+                + "/" + Constants.screenChanger.getGameState().getTotalHostages()), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -608,11 +607,9 @@ public class Popup {
         label = new Label("Enemy killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        //TODO total enemies / total hostages
         label = new Label((
-            Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalEnemies()
-                - Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getEnemies().size()
-                + "/" + Constants.gameScreen.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getTotalEnemies()), skin);
+            Constants.screenChanger.getGameState().getTakeOfEnemies()
+                + "/" + Constants.screenChanger.getGameState().getTotalEnemies()), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);

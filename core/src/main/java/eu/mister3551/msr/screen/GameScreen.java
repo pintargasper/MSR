@@ -118,7 +118,6 @@ public class GameScreen implements Screen {
         rayHandler.setBlur(true);
         rayHandler.setBlurNum(1);
         rayHandler.setLightMapRendering(true);
-
         timer.start();
     }
 

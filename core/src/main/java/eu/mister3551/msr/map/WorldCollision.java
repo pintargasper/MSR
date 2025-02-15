@@ -151,11 +151,6 @@ public class WorldCollision implements ContactListener {
             userDataA = ((BodyUserData) userDataA).getName();
             userDataB = ((BodyUserData) userDataB).getName();
 
-
-            if ("enemy1-head".equals(userDataA) && "enemy1-head".equals(userDataB)) {
-                System.out.println("enemy");
-            }
-
             if ("bullet".equals(userDataA) && "bullet".equals(userDataB)) {
                 handleBulletCollision(contact);
             }
@@ -212,6 +207,7 @@ public class WorldCollision implements ContactListener {
                         Constants.statistics.setScore((int) (Constants.statistics.getScore() + enemy.getAward()));
                         enemy.turnOffLight();
                         enemy.setProcessed(true);
+                        Constants.screenChanger.getGameState().setTakeOfEnemies(Constants.screenChanger.getGameState().getTakeOfEnemies() + 1);
                         Constants.gameScreen.getEnemiesToRemove().add(enemy);
                     }
                 }
@@ -246,6 +242,7 @@ public class WorldCollision implements ContactListener {
                         Constants.statistics.getHostageTypesKilled().put(hostageType, Constants.statistics.getHostageTypesKilled().getOrDefault(hostageType, 0) + 1);
                         hostage.turnOffLight();
                         hostage.setProcessed(true);
+                        Constants.screenChanger.getGameState().setTakeOfHostages(Constants.screenChanger.getGameState().getTakeOfHostages() + 1);
                         Constants.gameScreen.getHostageToRemove().add(hostage);
                     }
                 }
@@ -309,6 +306,7 @@ public class WorldCollision implements ContactListener {
                         Constants.statistics.getItemsCollected().put(hostageGroup, Constants.statistics.getItemsCollected().getOrDefault(hostageGroup, 0) + 1);
                         Constants.statistics.getMoney().put("hostages", Constants.statistics.getMoney().getOrDefault("hostages", 0.0f) + hostage.getAward());
                         Constants.statistics.setScore((int) (Constants.statistics.getScore() + hostage.getAward()));
+                        Constants.screenChanger.getGameState().setTakeOfHostages(Constants.screenChanger.getGameState().getTakeOfHostages() + 1);
                         Constants.gameScreen.getHostageToRemove().add(hostage);
                     }
                 }
