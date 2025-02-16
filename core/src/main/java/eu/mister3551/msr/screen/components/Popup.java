@@ -594,9 +594,7 @@ public class Popup {
         label = new Label("Hostage collected:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label((
-            Constants.screenChanger.getGameState().getTakeOfHostages()
-                + "/" + Constants.screenChanger.getGameState().getTotalHostages()), skin);
+        label = new Label((Constants.gameScreen.getCharacterCounts().get("totalHostages") - Constants.gameScreen.getCharacterCounts().get("remainHostages")) + "/" + Constants.gameScreen.getCharacterCounts().get("totalHostages"), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);
@@ -607,9 +605,7 @@ public class Popup {
         label = new Label("Enemy killed:", skin);
         table2.add(label).padLeft(5.0f).minWidth(130.0f).maxWidth(130.0f);
 
-        label = new Label((
-            Constants.screenChanger.getGameState().getTakeOfEnemies()
-                + "/" + Constants.screenChanger.getGameState().getTotalEnemies()), skin);
+        label = new Label((Constants.gameScreen.getCharacterCounts().get("totalEnemies") - Constants.gameScreen.getCharacterCounts().get("remainEnemies")) + "/" + Constants.gameScreen.getCharacterCounts().get("totalEnemies"), skin);
         label.setAlignment(Align.center);
         table2.add(label).padLeft(5.0f).minWidth(70.0f).maxWidth(70.0f);
         table1.add(table2).minWidth(200.0f).maxWidth(200.0f);

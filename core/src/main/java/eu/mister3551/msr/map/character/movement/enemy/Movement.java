@@ -19,10 +19,12 @@ public class Movement {
     private Vector2 targetPoint;
     private int currentTargetIndex;
     private boolean movingForward;
+    private boolean previouslyDetected;
 
     public Movement() {
         this.currentTargetIndex = 0;
         this.movingForward = true;
+        this.previouslyDetected = false;
     }
 
     public void move(Enemy enemy, ArrayList<Vector2> points, float delta) {
@@ -40,6 +42,15 @@ public class Movement {
         }
         enemy.getBody().setLinearVelocity(direction);
         enemy.getBody().setGravityScale(10);
+
+        if (enemy.isPlayerDetected() && !previouslyDetected) {
+            Constants.statistics.setEnemiesAlerted(Constants.statistics.getEnemiesAlerted() + 1);
+            previouslyDetected = true;
+        }
+
+        if (!enemy.isPlayerDetected()) {
+            previouslyDetected = false;
+        }
     }
 
     private Vector2 updateTargetPoint(Enemy enemy, ArrayList<Vector2> points) {

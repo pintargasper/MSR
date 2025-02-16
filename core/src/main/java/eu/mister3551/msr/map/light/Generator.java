@@ -20,7 +20,7 @@ public class Generator {
     }
 
     private void lights(String mapName) {
-        int rays = setShadowResolution("Normal");
+        int rays = setShadowResolution(Constants.options.getShadowsLights());
 
         for (Light light : Constants.screenChanger.getGameState().getGameStates().get(mapName).getLights()) {
             Rectangle rectangle = light.getBounds();
@@ -33,12 +33,12 @@ public class Generator {
                     pointLightTorch.setSoftnessLength(light.getSoftness());
                     break;
                 case "lamp":
-                    ConeLight coneLight = new ConeLight(rayHandler, rays, Color.CORAL, 7 * Constants.PPM, centerX, centerY, -90, 30);
-                    coneLight.setSoftnessLength(0f);
+                    ConeLight coneLight = new ConeLight(rayHandler, rays, Color.CORAL, light.getDistance(), centerX, centerY, -90, 30);
+                    coneLight.setSoftnessLength(light.getSoftness());
                     break;
                 case "sun":
-                    PointLight pointLightSun = new PointLight(rayHandler, rays, Color.WHITE, 300, centerX / Constants.PPM, centerY / Constants.PPM);
-                    pointLightSun.setSoftnessLength(1f);
+                    PointLight pointLightSun = new PointLight(rayHandler, rays, Color.WHITE, light.getDistance(), centerX / Constants.PPM, centerY / Constants.PPM);
+                    pointLightSun.setSoftnessLength(light.getSoftness());
                     break;
             }
         }

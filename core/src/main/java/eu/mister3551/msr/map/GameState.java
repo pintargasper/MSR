@@ -13,13 +13,11 @@ import java.util.LinkedHashMap;
 public class GameState {
 
     LinkedHashMap<String, Helper> gameStates;
-    private int totalHostages;
-    private int totalEnemies;
-    private int takeOfHostages;
-    private int takeOfEnemies;
+    LinkedHashMap<String, Helper> gameStatesBackup;
 
     public GameState(Mission mission) {
         this.gameStates = new LinkedHashMap<>();
+        this.gameStatesBackup = new LinkedHashMap<>();
 
         String missionName = mission.getName().toLowerCase();
 
@@ -29,11 +27,7 @@ public class GameState {
 
         for (String map : maps) {
             gameStates.put(map, new Helper().setUp(missionName, map));
-        }
-
-        for (Helper helper : gameStates.values()) {
-            totalHostages += helper.getHostages().size();
-            totalEnemies += helper.getEnemies().size();
+            gameStatesBackup.put(map, new Helper().setUp(missionName, map));
         }
     }
 }

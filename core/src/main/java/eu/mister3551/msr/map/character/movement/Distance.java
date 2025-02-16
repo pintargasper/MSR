@@ -43,34 +43,13 @@ public class Distance {
         return integerPart + "." + decimalPart + " m";
     }
 
-    //TODO improve calculateProgress
-    public double calculateProgress(Player player) {
-        Vector2 playerPosition = player.getBody().getPosition();
-
-        Rectangle startRectangle = Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getDoors().stream()
-            .filter(object -> "start".equals(object.getName()))
-            .map(object -> (RectangleMapObject) object)
-            .findFirst()
-            .map(RectangleMapObject::getRectangle)
-            .orElse(null);
-
-        Rectangle endRectangle = Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getDoors().stream()
-            .filter(object -> "end".equals(object.getName()))
-            .map(object -> (RectangleMapObject) object)
-            .findFirst()
-            .map(RectangleMapObject::getRectangle)
-            .orElse(null);
-
-        if (startRectangle == null || endRectangle == null) {
-            return 0;
-        }
-
-        float totalDistance = new Vector2(Converter.coordinates(endRectangle)).dst(Converter.coordinates(startRectangle));
-        float traveledDistance = new Vector2(playerPosition).dst(Converter.coordinates(startRectangle));
-        double progress = Math.round((traveledDistance / totalDistance * 100));
-
-        return (Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getEnemies().isEmpty()
-            && Constants.screenChanger.getGameState().getGameStates().get(Constants.gameScreen.getMission().getMap()).getHostages().isEmpty()
-            && progress >= 98 && progress <= 102) ? 100 : progress;
+    public double calculateProgress() {
+        int main = Constants.screenChanger.getGameState().getGameStates().values().stream()
+            .mapToInt(helper -> helper.getEnemies().size() + helper.getHostages().size())
+            .sum();
+        int backup = Constants.screenChanger.getGameState().getGameStatesBackup().values().stream()
+            .mapToInt(helper -> helper.getEnemies().size() + helper.getHostages().size())
+            .sum();
+        return (backup == 0) ? 0 : (1.0 - ((double) main / backup)) * 100;
     }
 }

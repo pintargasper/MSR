@@ -37,6 +37,8 @@ import eu.mister3551.msr.screen.link.Callback;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class GameScreen implements Screen {
@@ -52,33 +54,27 @@ public class GameScreen implements Screen {
     private final SpriteBatch spriteBatch;
     private final Camera camera;
     private final Player player;
-
     private final GameState gameState;
-
-    public GameStats gameStats;
-    public enum GameStats {
-        IN_PROCESS, PAUSE, COMPLETE, FAILED, END
-    }
-
     private final BodyHelper bodyHelper;
     private final DetectionSystem detectionSystem;
-
     private final ArrayList<Bullet> bullets;
     private final ArrayList<Bullet> bulletsToRemove;
     private final ArrayList<Enemy> enemiesToRemove;
     private final ArrayList<Hostage> hostageToRemove;
     private final ArrayList<Item> itemsToRemove;
-
+    private final Map<String, Integer> characterCounts;
     private final CleanUp cleanUp;
     private final Visualisation visualisation;
-
     private final Timer timer;
     private final Distance distance;
-
     private final float light;
-
     private Label ammoLabel;
     private Label distanceLabel;
+
+    public GameStats gameStats;
+    public enum GameStats {
+        IN_PROCESS, PAUSE, COMPLETE, FAILED, END
+    }
 
     public GameScreen(Mission mission, GameState gameState) {
         this.mission = mission;
@@ -100,25 +96,26 @@ public class GameScreen implements Screen {
         this.enemiesToRemove = new ArrayList<>();
         this.hostageToRemove = new ArrayList<>();
         this.itemsToRemove = new ArrayList<>();
+        this.characterCounts = new HashMap<>();
         this.cleanUp = new CleanUp();
         this.visualisation = new Visualisation();
         this.distance = new Distance();
         this.timer = Constants.screenChanger.getTimer();
         this.light = gameState.getGameStates().get(mission.getMap()).getLight();
-        this.rayHandler.setAmbientLight(light);
-        this.rayHandler.setShadows(true);
-        player.setMobile(new Mobile(player, Constants.options, light < 0.5f));
-        world.setContactListener(new WorldCollision(player));
+        this.player.setMobile(new Mobile(player, Constants.options, light < 0.5f));
+        this.world.setContactListener(new WorldCollision(player));
         new Generator(rayHandler).generate(mission.getMap());
-        gameStats = GameStats.IN_PROCESS;
+        this.gameStats = GameStats.IN_PROCESS;
         Constants.gameScreen = this;
         RayHandler.setGammaCorrection(true);
         RayHandler.useDiffuseLight(gameState.getGameStates().get(mission.getMap()).isDiffuseLight());
-        rayHandler.setCulling(true);
-        rayHandler.setBlur(true);
-        rayHandler.setBlurNum(1);
-        rayHandler.setLightMapRendering(true);
-        timer.start();
+        this.rayHandler.setAmbientLight(light);
+        this.rayHandler.setShadows(true);
+        this.rayHandler.setCulling(true);
+        this.rayHandler.setBlur(true);
+        this.rayHandler.setBlurNum(1);
+        this.rayHandler.setLightMapRendering(true);
+        this.timer.start();
     }
 
     @Override
@@ -331,7 +328,6 @@ public class GameScreen implements Screen {
         for (Item item : Constants.screenChanger.getGameState().getGameStates().get(mission.getMap()).getItems()) {
             item.dispose();
         }
-
         skin.dispose();
         stage.dispose();
         rayHandler.dispose();
@@ -429,6 +425,7 @@ public class GameScreen implements Screen {
 
     private void failedMission() {
         gameStats = GameStats.END;
+        checkRemains();
 
         Constants.data.insertMission(statistics(false), new Callback() {
             @Override
@@ -453,6 +450,7 @@ public class GameScreen implements Screen {
 
     private void completeMission() {
         gameStats = GameStats.END;
+        checkRemains();
 
         Constants.data.insertMission(statistics(true), new Callback() {
             @Override
@@ -490,7 +488,25 @@ public class GameScreen implements Screen {
         statistics.setAccuracy();
         statistics.setWin(win);
         statistics.setTotalMoney();
-        statistics.setDistanceTraveled(distance.calculateProgress(player));
+        statistics.setDistanceTraveled(distance.calculateProgress());
         return statistics;
+    }
+
+    private void checkRemains() {
+        characterCounts.put("remainHostages", Constants.screenChanger.getGameState().getGameStates().values().stream()
+            .mapToInt(helper -> helper.getHostages().size())
+            .sum());
+
+        characterCounts.put("remainEnemies", Constants.screenChanger.getGameState().getGameStates().values().stream()
+            .mapToInt(helper -> helper.getEnemies().size())
+            .sum());
+
+        characterCounts.put("totalHostages", Constants.screenChanger.getGameState().getGameStatesBackup().values().stream()
+            .mapToInt(helper -> helper.getHostages().size())
+            .sum());
+
+        characterCounts.put("totalEnemies", Constants.screenChanger.getGameState().getGameStatesBackup().values().stream()
+            .mapToInt(helper -> helper.getEnemies().size())
+            .sum());
     }
 }

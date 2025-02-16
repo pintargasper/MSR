@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO enemies alerted
 @Getter
 @Setter
 public class Statistics implements Json.Serializable {
@@ -109,8 +108,8 @@ public class Statistics implements Json.Serializable {
     }
 
     public void setAccuracy() {
-        missedShots = shotsFired - shotsHit;
-        accuracy = shotsFired > 0 ? Math.round(((this.shotsFired - this.missedShots) / (double) this.shotsFired) * 100 * 100) / 100.0 : 0;
+        missedShots = Math.max(0, shotsFired - shotsHit);
+        accuracy = shotsFired > 0 ? Math.round(((shotsFired - missedShots) / (double) shotsFired) * 100 * 100) / 100.0 : 0;
     }
 
     public void setTotalMoney() {
